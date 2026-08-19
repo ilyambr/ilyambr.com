@@ -1,0 +1,282 @@
+/* ============================================================
+   Visual style: "page" — a normal scrolling website, retro-styled.
+   Warm paper ground, hard offset shadows, wide-tracked display
+   type. No floating window/desktop metaphor.
+   ============================================================ */
+
+[data-style="page"] {
+  --rp-bg: #f2ead9;
+  --rp-surface: #fffdf7;
+  --rp-ink: #2b2016;
+  --rp-ink-dim: #7a6d58;
+  --rp-accent: #2b2016; /* grey/default: monochrome */
+  --rp-accent-ink: #fffdf7;
+  font-family: -apple-system, "Segoe UI", Tahoma, sans-serif;
+}
+
+[data-style="page"][data-theme="green"] {
+  --rp-accent: #35603f;
+}
+
+[data-style="page"][data-theme="red"] {
+  --rp-accent: #9c3b2c;
+}
+
+[data-style="page"] {
+  background: var(--rp-bg);
+  color: var(--rp-ink);
+}
+
+.retro-page {
+  width: 100%;
+  background: var(--rp-bg);
+  color: var(--rp-ink);
+}
+
+.retro-page * {
+  box-sizing: border-box;
+}
+
+.retro-page h1,
+.retro-page h2,
+.retro-page h3 {
+  font-family: "Courier New", ui-monospace, monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin: 0;
+}
+
+.rp-dot {
+  color: var(--rp-accent);
+}
+
+.rp-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 28px;
+  border-bottom: 3px solid var(--rp-ink);
+}
+
+.rp-wordmark {
+  font-family: "Courier New", ui-monospace, monospace;
+  font-weight: bold;
+  font-size: 15px;
+  letter-spacing: 0.03em;
+}
+
+.rp-nav nav {
+  display: flex;
+  gap: 20px;
+}
+
+.rp-nav nav a {
+  color: var(--rp-ink);
+  text-decoration: none;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border-bottom: 2px solid transparent;
+  padding-bottom: 2px;
+}
+
+.rp-nav nav a:hover {
+  border-bottom-color: var(--rp-accent);
+}
+
+.rp-hero {
+  padding: 56px 28px 40px;
+  text-align: center;
+  border-bottom: 3px solid var(--rp-ink);
+}
+
+.rp-eyebrow {
+  margin: 0 0 6px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--rp-ink-dim);
+}
+
+.rp-hero h1 {
+  font-size: 40px;
+  line-height: 1;
+}
+
+.rp-tagline {
+  margin: 10px 0 0;
+  color: var(--rp-ink-dim);
+  font-size: 14px;
+}
+
+.rp-info {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 12px;
+  color: var(--rp-ink-dim);
+}
+
+.rp-info a {
+  color: var(--rp-accent);
+  text-decoration: underline;
+}
+
+.rp-section {
+  padding: 36px 28px;
+  border-bottom: 3px solid var(--rp-ink);
+}
+
+.rp-section h2 {
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  color: var(--rp-ink-dim);
+  margin-bottom: 18px;
+}
+
+.rp-section h2::before {
+  content: "// ";
+  color: var(--rp-accent);
+}
+
+.rp-project-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.rp-card {
+  display: block;
+  background: var(--rp-surface);
+  border: 2px solid var(--rp-ink);
+  box-shadow: 5px 5px 0 var(--rp-ink);
+  padding: 14px 16px;
+  text-decoration: none;
+  color: var(--rp-ink);
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.rp-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 7px 7px 0 var(--rp-accent);
+}
+
+.rp-card h3 {
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+.rp-card p {
+  margin: 0;
+  font-size: 12px;
+  color: var(--rp-ink-dim);
+  line-height: 1.5;
+}
+
+.rp-link-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.rp-pill {
+  display: inline-block;
+  padding: 8px 18px;
+  background: var(--rp-ink);
+  color: var(--rp-surface);
+  text-decoration: none;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border: 2px solid var(--rp-ink);
+}
+
+.rp-pill:hover {
+  background: var(--rp-accent);
+  border-color: var(--rp-accent);
+}
+
+.rp-stat-row {
+  display: flex;
+  gap: 16px;
+}
+
+.rp-stat {
+  flex: 1;
+  text-align: center;
+  padding: 24px 12px;
+  background: var(--rp-surface);
+  border: 2px solid var(--rp-ink);
+  box-shadow: 5px 5px 0 var(--rp-ink);
+  text-decoration: none;
+  color: var(--rp-ink);
+}
+
+.rp-stat-num {
+  display: block;
+  font-family: "Courier New", ui-monospace, monospace;
+  font-size: 36px;
+  font-weight: bold;
+  font-variant-numeric: tabular-nums;
+  color: var(--rp-accent);
+}
+
+.rp-stat-label {
+  display: block;
+  margin-top: 6px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--rp-ink-dim);
+}
+
+.rp-others-lead {
+  margin: 0 0 12px;
+  font-size: 13px;
+  color: var(--rp-ink-dim);
+}
+
+.rp-collab {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--rp-surface);
+  border: 2px solid var(--rp-ink);
+  box-shadow: 5px 5px 0 var(--rp-ink);
+  padding: 12px 20px;
+  text-decoration: none;
+  color: var(--rp-ink);
+  font-family: "Courier New", ui-monospace, monospace;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 13px;
+}
+
+.rp-collab-arrow {
+  color: var(--rp-accent);
+}
+
+.rp-footer {
+  padding: 18px 28px;
+  text-align: center;
+  font-size: 11px;
+  color: var(--rp-ink-dim);
+}
+
+.rp-footer a {
+  color: var(--rp-accent);
+}
+
+@media (max-width: 560px) {
+  .rp-project-grid {
+    grid-template-columns: 1fr;
+  }
+  .rp-stat-row {
+    flex-direction: column;
+  }
+  .rp-nav nav {
+    gap: 12px;
+  }
+}

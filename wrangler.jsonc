@@ -1,12 +1,14 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "ilyambr",
+  "main": "src/index.js",
   "compatibility_date": "2026-06-28",
   "observability": {
     "enabled": true
   },
   "assets": {
-    "directory": "."
+    "directory": "public",
+    "binding": "ASSETS"
   },
   "compatibility_flags": [
     "nodejs_compat"

@@ -1,0 +1,387 @@
+/* ilyambr.com — modern flat, dark mode, pearlescent iridescent accent. */
+
+:root {
+  --bg: #000000;
+  --window-bg: #0a0a0a;
+  --surface: #161616;
+  --surface-hover: #1f1f1f;
+  --ink: #f2f2f4;
+  --ink-dim: #8e8e93;
+  --border: #2c2c2e;
+  /* mother-of-pearl shimmer: visible on black, softer than a neon rainbow */
+  --iris: repeating-linear-gradient(
+    100deg,
+    #ff9fd6 0px,
+    #b28dff 14px,
+    #7fb8ff 28px,
+    #6ff0d2 42px,
+    #ffe27f 56px,
+    #ff9fd6 70px
+  );
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI",
+    "Helvetica Neue", Arial, sans-serif;
+}
+
+a {
+  color: var(--ink);
+}
+
+.desktop-window {
+  width: 640px;
+  max-width: calc(100vw - 32px);
+  margin: 32px 0;
+}
+
+.window {
+  background: var(--window-bg);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.03);
+  overflow: hidden;
+}
+
+.title-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+}
+
+.title-bar-text {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: -0.01em;
+}
+
+.title-bar-text img {
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+}
+
+.title-bar-controls {
+  display: flex;
+  gap: 8px;
+}
+
+.title-bar-controls button {
+  appearance: none;
+  background: var(--surface);
+  border: none;
+  border-radius: 50%;
+  width: 12px;
+  height: 12px;
+  min-width: 12px;
+  min-height: 12px;
+  padding: 0;
+  cursor: pointer;
+}
+
+.window-body {
+  margin: 0;
+}
+
+/* --- Tabs --- */
+
+.tabs input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.tab-bar {
+  display: flex;
+  gap: 4px;
+  padding: 0 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.tab-bar label {
+  padding: 12px 12px;
+  color: var(--ink-dim);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  user-select: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+
+#tab-main:checked ~ .tab-bar label[for="tab-main"],
+#tab-projects:checked ~ .tab-bar label[for="tab-projects"],
+#tab-links:checked ~ .tab-bar label[for="tab-links"],
+#tab-socials:checked ~ .tab-bar label[for="tab-socials"],
+#tab-others:checked ~ .tab-bar label[for="tab-others"] {
+  color: var(--ink);
+  font-weight: 600;
+  border-image: var(--iris) 1;
+}
+
+.panels {
+  padding: 20px;
+  min-height: 280px;
+}
+
+.panels section {
+  display: none;
+}
+
+#tab-main:checked ~ .panels #panel-main,
+#tab-projects:checked ~ .panels #panel-projects,
+#tab-links:checked ~ .panels #panel-links,
+#tab-socials:checked ~ .panels #panel-socials,
+#tab-others:checked ~ .panels #panel-others {
+  display: block;
+}
+
+/* --- Main tab --- */
+
+.main-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.main-header img {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+}
+
+.main-header h1 {
+  margin: 0;
+  font-size: 21px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.main-header p {
+  margin: 2px 0 0;
+  font-size: 13px;
+  color: var(--ink-dim);
+}
+
+.site-info fieldset {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin: 0;
+}
+
+.site-info legend {
+  padding: 0 6px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-dim);
+}
+
+.site-info dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 6px 10px;
+  margin: 0;
+  font-size: 13px;
+}
+
+.site-info dt {
+  font-weight: 500;
+  color: var(--ink-dim);
+}
+
+/* --- Projects tab --- */
+
+.project-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.project-card {
+  background: var(--surface);
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+
+.project-card .project-name {
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.project-card p {
+  margin: 4px 0 0;
+  font-size: 12.5px;
+  color: var(--ink-dim);
+  line-height: 1.45;
+}
+
+.project-card p a {
+  color: var(--ink-dim);
+  text-decoration: underline;
+}
+
+/* --- Links tab --- */
+
+.link-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.link-list li a.link-btn {
+  display: block;
+  background: var(--surface);
+  border-radius: 10px;
+  padding: 12px 14px;
+  text-decoration: none;
+  font-size: 13.5px;
+  font-weight: 500;
+}
+
+.link-list li a.link-btn:hover {
+  background: var(--surface-hover);
+}
+
+/* --- Socials tab --- */
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.stat-grid .stat-card:nth-child(3) {
+  grid-column: 1 / -1;
+  width: calc(50% - 5px);
+  justify-self: center;
+}
+
+.stat-card {
+  background: var(--surface);
+  border-radius: 10px;
+  padding: 18px 10px;
+  text-align: center;
+  text-decoration: none;
+  display: block;
+  transition: background 0.15s ease;
+}
+
+.stat-card:hover {
+  background: var(--surface-hover);
+}
+
+.stat-card .stat-label {
+  font-size: 11px;
+  color: var(--ink-dim);
+}
+
+.stat-card .stat-value {
+  font-size: 26px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  margin: 6px 0;
+  letter-spacing: -0.02em;
+  background-image: var(--iris);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+/* --- Others tab --- */
+
+.collab-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+p.rp-others-lead,
+#panel-others > p {
+  font-size: 13px;
+  color: var(--ink-dim);
+  margin: 0 0 12px;
+}
+
+.collab-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-decoration: none;
+  padding: 14px 16px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid transparent;
+  transition: background 0.15s ease;
+}
+
+.collab-btn:hover {
+  background: var(--surface-hover);
+}
+
+.collab-who {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.collab-avatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: block;
+}
+
+.collab-who span {
+  background-image: var(--iris);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.collab-projects {
+  color: var(--ink);
+}
+
+.collab-project {
+  cursor: default;
+}
+
+footer.window-body-footer {
+  font-size: 11.5px;
+  color: var(--ink-dim);
+  padding: 12px 20px;
+  border-top: 1px solid var(--border);
+  text-align: center;
+}
+
+footer.window-body-footer a {
+  color: var(--ink-dim);
+}
