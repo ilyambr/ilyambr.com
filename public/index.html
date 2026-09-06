@@ -131,30 +131,25 @@
     }
 
     footer {
+      position: absolute;
+      bottom: clamp(8px, 1.6vh, 20px);
+      left: 50%;
+      transform: translateX(-50%);
       display: flex;
       justify-content: center;
       align-items: center;
-      margin-top: 3.5vh;
-    }
-
-    .footer-logo-link {
-      display: inline-block;
-      line-height: 0;
-      text-decoration: none;
+      z-index: 10;
+      pointer-events: none;
     }
 
     .footer-logo {
       display: block;
-      height: clamp(30px, 5vh, 52px);
-      width: clamp(80px, 12vw, 140px);
+      height: clamp(26px, 4.2vh, 46px);
+      width: clamp(75px, 10vw, 130px);
       background-color: var(--text-color);
       -webkit-mask: url('/ilyambr.png') no-repeat center center / contain;
       mask: url('/ilyambr.png') no-repeat center center / contain;
-      transition: background-color 0.2s ease;
-    }
-
-    .footer-logo-link:hover .footer-logo {
-      background-color: var(--text-hover);
+      pointer-events: none;
     }
 
     /* Custom Cursor */
@@ -256,10 +251,8 @@
     </div>
   </div>
 
-  <footer>
-    <a href="/" class="footer-logo-link cursor-hover" aria-label="ilyambr">
-      <div class="footer-logo cursor-hover"></div>
-    </a>
+  <footer class="no-cursor-snap">
+    <div class="footer-logo no-cursor-snap" aria-label="ilyambr"></div>
   </footer>
 
   <script src="/backtrack/cursor.js"></script>
