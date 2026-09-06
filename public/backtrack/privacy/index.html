@@ -103,9 +103,17 @@
     <!-- Header Navigation -->
     <header class="site-header">
         <div class="header-logo">
-            <a href="/backtrack/" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 0.75rem;">
-                <img src="/backtrack/backtrack-text-logo.png" alt="Backtrack" class="backtrack-text-logo">
-            </a>
+            <nav class="header-breadcrumb" aria-label="Breadcrumb">
+                <a href="/" class="header-breadcrumb-item header-brand-root" title="ilyambr.com">
+                    <img src="/ilyambr.png" alt="ilyambr" class="ilyambr-text-logo">
+                </a>
+                <span class="header-breadcrumb-slash">/</span>
+                <a href="/backtrack/" class="header-breadcrumb-item" title="Backtrack">
+                    <img src="/backtrack/backtrack-text-logo.png" alt="Backtrack" class="backtrack-text-logo">
+                </a>
+                <span class="header-breadcrumb-slash">/</span>
+                <span class="header-breadcrumb-page">privacy</span>
+            </nav>
         </div>
         <nav class="header-nav">
             <a href="/backtrack/" class="nav-link">home</a>
@@ -216,7 +224,15 @@
     <footer class="site-footer">
         <div class="footer-content">
             <div class="footer-brand">
-                <img src="/backtrack/backtrack-text-logo.png" alt="Backtrack" class="backtrack-text-logo" style="height: 20px;">
+                <nav class="header-breadcrumb" aria-label="Footer Breadcrumb">
+                    <a href="/" class="header-breadcrumb-item header-brand-root" title="ilyambr.com">
+                        <img src="/ilyambr.png" alt="ilyambr" class="ilyambr-text-logo" style="height: 15px; opacity: 0.75;">
+                    </a>
+                    <span class="header-breadcrumb-slash">/</span>
+                    <a href="/backtrack/" class="header-breadcrumb-item" title="Backtrack">
+                        <img src="/backtrack/backtrack-text-logo.png" alt="Backtrack" class="backtrack-text-logo" style="height: 18px;">
+                    </a>
+                </nav>
             </div>
             <div class="footer-links" style="display: flex; gap: 1.5rem;">
                 <a href="/backtrack/terms/">terms of service</a>

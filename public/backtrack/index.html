@@ -62,9 +62,15 @@
     <!-- Header Navigation -->
     <header class="site-header">
         <div class="header-logo">
-            <a href="/backtrack/" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 0.75rem;">
-                <img src="/backtrack/backtrack-text-logo.png" alt="Backtrack" class="backtrack-text-logo">
-            </a>
+            <nav class="header-breadcrumb" aria-label="Breadcrumb">
+                <a href="/" class="header-breadcrumb-item header-brand-root" title="ilyambr.com">
+                    <img src="/ilyambr.png" alt="ilyambr" class="ilyambr-text-logo">
+                </a>
+                <span class="header-breadcrumb-slash">/</span>
+                <a href="/backtrack/" class="header-breadcrumb-item header-brand-current" title="Backtrack">
+                    <img src="/backtrack/backtrack-text-logo.png" alt="Backtrack" class="backtrack-text-logo">
+                </a>
+            </nav>
         </div>
         <nav class="header-nav">
             <a href="https://docs.ilyambr.com/backtrack" class="nav-link" target="_blank" rel="noopener">docs</a>
@@ -151,19 +157,6 @@
                         Full overlay display with recording HUD, replay buffer status, and recent clip timeline dock running seamlessly above active gameplay.
                     </div>
                 </div>
-
-                <div class="screenshot-card" style="margin-top: 2rem;">
-                    <div class="screenshot-card-header">
-                        <span class="screenshot-card-title">LIVE STATUS NOTIFICATION HUD</span>
-                        <span class="screenshot-card-meta">livestream-hud.png</span>
-                    </div>
-                    <div class="screenshot-card-body">
-                        <img src="/backtrack/livestream-hud.png" alt="Backtrack Livestreaming Status HUD" class="screenshot-card-img" loading="lazy">
-                    </div>
-                    <div class="screenshot-card-caption">
-                        Active stream detection banner alerts when stream is live to ensure seamless broadcast session management.
-                    </div>
-                </div>
             </section>
         </div>
 
@@ -229,7 +222,15 @@
     <footer class="site-footer">
         <div class="footer-content">
             <div class="footer-brand">
-                <img src="/backtrack/backtrack-text-logo.png" alt="Backtrack" class="backtrack-text-logo" style="height: 20px;">
+                <nav class="header-breadcrumb" aria-label="Footer Breadcrumb">
+                    <a href="/" class="header-breadcrumb-item header-brand-root" title="ilyambr.com">
+                        <img src="/ilyambr.png" alt="ilyambr" class="ilyambr-text-logo" style="height: 15px; opacity: 0.75;">
+                    </a>
+                    <span class="header-breadcrumb-slash">/</span>
+                    <a href="/backtrack/" class="header-breadcrumb-item header-brand-current" title="Backtrack">
+                        <img src="/backtrack/backtrack-text-logo.png" alt="Backtrack" class="backtrack-text-logo" style="height: 18px;">
+                    </a>
+                </nav>
             </div>
             <div class="footer-links" style="display: flex; gap: 1.5rem;">
                 <a href="/backtrack/privacy/">privacy policy</a>
