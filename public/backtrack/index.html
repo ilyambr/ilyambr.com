@@ -16,7 +16,7 @@
             display: flex;
             flex-direction: column;
             gap: 3.5rem;
-            max-width: 820px;
+            width: 100%;
         }
 
         .feature-block {
@@ -75,61 +75,120 @@
     </header>
 
     <!-- Main Container -->
-    <main class="main-content">
-        <!-- Hero Section -->
-        <section class="hero-section">
-            <h1 class="hero-heading">
-                <span class="line">capture without</span>
-                <span class="line"><span class="highlight-text">alt-tabbing.</span></span>
-            </h1>
+    <main class="main-content landing-grid">
+        <div class="content-column">
+            <!-- Hero Section -->
+            <section class="hero-section">
+                <h1 class="hero-heading">
+                    <span class="line">capture without</span>
+                    <span class="line"><span class="highlight-text">alt-tabbing.</span></span>
+                </h1>
 
-            <p class="hero-subtitle">
-                A hotkey-summoned overlay HUD for OBS to record, save your replay buffer, and browse your clips without ever leaving your game.
-            </p>
+                <p class="hero-subtitle">
+                    A hotkey-summoned overlay HUD for OBS to record, save your replay buffer, and browse your clips without ever leaving your game.
+                </p>
 
-            <div class="hero-cta-group">
-                <a href="https://github.com/ilyambr/backtrack/releases" class="btn btn-primary" target="_blank" rel="noopener">
-                    <span>Download Latest Release</span>
-                </a>
-                <a href="https://docs.ilyambr.com/backtrack" class="btn btn-secondary" target="_blank" rel="noopener">
-                    <span>Read Documentation</span>
-                </a>
+                <div class="hero-cta-group">
+                    <a href="https://github.com/ilyambr/backtrack/releases" class="btn btn-primary" target="_blank" rel="noopener">
+                        <span>Download Latest Release</span>
+                    </a>
+                    <a href="https://docs.ilyambr.com/backtrack" class="btn btn-secondary" target="_blank" rel="noopener">
+                        <span>Read Documentation</span>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Features / Paragraph Style Layout -->
+            <section class="features-section">
+                <div class="section-header">
+                    <span class="section-label">FEATURES // ARCHITECTURE</span>
+                    <h2 class="section-title">Built For Streamers & Gamers</h2>
+                </div>
+
+                <div class="features-editorial">
+                    <article class="feature-block">
+                        <span class="feature-num">01 // OVERLAY HUD</span>
+                        <h3 class="feature-title">Hotkey-Summoned In-Game HUD</h3>
+                        <p class="feature-text">Instantly overlay your clips, gallery, and playback controls over fullscreen games with a single customizable shortcut. Never lose your crosshair or pause mid-match.</p>
+                    </article>
+
+                    <article class="feature-block">
+                        <span class="feature-num">02 // ZERO OVERHEAD</span>
+                        <h3 class="feature-title">Native obs-websocket Architecture</h3>
+                        <p class="feature-text">Communicates entirely over native obs-websocket. Never touches your OBS scene collections, encoders, or settings directly—it works on top of whatever setup you already have.</p>
+                    </article>
+
+                    <article class="feature-block">
+                        <span class="feature-num">03 // DUAL-PC SUPPORT</span>
+                        <h3 class="feature-title">Peer-to-Peer Remote Sync & Streaming</h3>
+                        <p class="feature-text">Pair dual-PC streaming rigs seamlessly over local area networks or private Tailscale mesh. Stream video preview frames and trigger remote recording buffers without any cloud servers.</p>
+                    </article>
+
+                    <article class="feature-block">
+                        <span class="feature-num">04 // STREAM DECK HARDWARE</span>
+                        <h3 class="feature-title">Two-Way Stream Deck Plugin</h3>
+                        <p class="feature-text">Hardware integration with real-time recording stopwatch timers, live replay buffer indicators, and one-tap chapter star bookmark drops directly into your clips.</p>
+                    </article>
+                </div>
+            </section>
+        </div>
+
+        <!-- Stacked Screenshots from README -->
+        <aside class="media-column">
+            <div class="screenshot-stack">
+                <div class="screenshot-card">
+                    <div class="screenshot-card-header">
+                        <span class="screenshot-card-title">01 // IDLE HUD</span>
+                        <span class="screenshot-card-meta">idle.png</span>
+                    </div>
+                    <div class="screenshot-card-body">
+                        <img src="/backtrack/idle.png" alt="Backtrack Idle HUD Overlay" class="screenshot-card-img" loading="lazy">
+                    </div>
+                    <div class="screenshot-card-caption">
+                        Hotkey-summoned HUD overlay running directly over active fullscreen games.
+                    </div>
+                </div>
+
+                <div class="screenshot-card">
+                    <div class="screenshot-card-header">
+                        <span class="screenshot-card-title">02 // GALLERY</span>
+                        <span class="screenshot-card-meta">gallery.png</span>
+                    </div>
+                    <div class="screenshot-card-body">
+                        <img src="/backtrack/gallery.png" alt="Backtrack Clip Gallery" class="screenshot-card-img" loading="lazy">
+                    </div>
+                    <div class="screenshot-card-caption">
+                        Integrated media browser with video thumbnails, filters, and star bookmark tags.
+                    </div>
+                </div>
+
+                <div class="screenshot-card">
+                    <div class="screenshot-card-header">
+                        <span class="screenshot-card-title">03 // PLAYER</span>
+                        <span class="screenshot-card-meta">player.png</span>
+                    </div>
+                    <div class="screenshot-card-body">
+                        <img src="/backtrack/player.png" alt="Backtrack LibVLC Player" class="screenshot-card-img" loading="lazy">
+                    </div>
+                    <div class="screenshot-card-caption">
+                        LibVLC playback surface with interactive timeline trimming and audio track selector.
+                    </div>
+                </div>
+
+                <div class="screenshot-card">
+                    <div class="screenshot-card-header">
+                        <span class="screenshot-card-title">04 // SETTINGS</span>
+                        <span class="screenshot-card-meta">settings.png</span>
+                    </div>
+                    <div class="screenshot-card-body">
+                        <img src="/backtrack/settings.png" alt="Backtrack Settings Panel" class="screenshot-card-img" loading="lazy">
+                    </div>
+                    <div class="screenshot-card-caption">
+                        Configuration for obs-websocket, hotkeys, RAM disk replay buffer, and Stream Deck.
+                    </div>
+                </div>
             </div>
-        </section>
-
-        <!-- Features / Paragraph Style Layout -->
-        <section class="features-section">
-            <div class="section-header">
-                <span class="section-label">FEATURES // ARCHITECTURE</span>
-                <h2 class="section-title">Built For Streamers & Gamers</h2>
-            </div>
-
-            <div class="features-editorial">
-                <article class="feature-block">
-                    <span class="feature-num">01 // OVERLAY HUD</span>
-                    <h3 class="feature-title">Hotkey-Summoned In-Game HUD</h3>
-                    <p class="feature-text">Instantly overlay your clips, gallery, and playback controls over fullscreen games with a single customizable shortcut. Never lose your crosshair or pause mid-match.</p>
-                </article>
-
-                <article class="feature-block">
-                    <span class="feature-num">02 // ZERO OVERHEAD</span>
-                    <h3 class="feature-title">Native obs-websocket Architecture</h3>
-                    <p class="feature-text">Communicates entirely over native obs-websocket. Never touches your OBS scene collections, encoders, or settings directly—it works on top of whatever setup you already have.</p>
-                </article>
-
-                <article class="feature-block">
-                    <span class="feature-num">03 // DUAL-PC SUPPORT</span>
-                    <h3 class="feature-title">Peer-to-Peer Remote Sync & Streaming</h3>
-                    <p class="feature-text">Pair dual-PC streaming rigs seamlessly over local area networks or private Tailscale mesh. Stream video preview frames and trigger remote recording buffers without any cloud servers.</p>
-                </article>
-
-                <article class="feature-block">
-                    <span class="feature-num">04 // STREAM DECK HARDWARE</span>
-                    <h3 class="feature-title">Two-Way Stream Deck Plugin</h3>
-                    <p class="feature-text">Hardware integration with real-time recording stopwatch timers, live replay buffer indicators, and one-tap chapter star bookmark drops directly into your clips.</p>
-                </article>
-            </div>
-        </section>
+        </aside>
     </main>
 
     <!-- Footer -->
