@@ -219,10 +219,15 @@ body {
 }
 
 .ilyambr-text-logo {
-    height: 18px;
+    height: 26px;
     width: auto;
     display: block;
     object-fit: contain;
+}
+
+.footer-brand .ilyambr-text-logo {
+    height: 16px;
+    opacity: 0.75;
 }
 
 .header-breadcrumb-slash {
@@ -1043,5 +1048,182 @@ body {
     .dog-avatar-anchor {
         width: 110px;
         right: 1rem;
+    }
+}
+
+/* ==========================================================================
+   Pet Avatar Custom Context Menu
+   ========================================================================== */
+.pet-context-menu {
+    position: fixed;
+    z-index: 100000;
+    background-color: var(--bg-surface-elevated);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.85);
+    padding: 0.35rem;
+    display: none;
+    min-width: 190px;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    user-select: none;
+}
+
+.pet-context-menu.active {
+    display: block;
+}
+
+.pet-context-item {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.65rem 0.95rem;
+    color: var(--text-primary);
+    background: transparent;
+    border: 1px solid transparent;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+    font-family: inherit;
+    font-size: inherit;
+    letter-spacing: -0.01em;
+}
+
+.pet-context-item:hover {
+    background-color: var(--bg-surface);
+    border-color: var(--border-medium);
+    color: #ffffff;
+}
+
+/* ==========================================================================
+   Legal 2-Column Grid Layout & Sidebar
+   ========================================================================== */
+.legal-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 360px;
+    gap: 4.5rem;
+    align-items: start;
+}
+
+.legal-main {
+    display: flex;
+    flex-direction: column;
+    gap: 3.5rem;
+    width: 100%;
+}
+
+.legal-articles {
+    display: flex;
+    flex-direction: column;
+    gap: 3.5rem;
+}
+
+.legal-sidebar {
+    position: relative;
+    width: 100%;
+}
+
+.legal-sidebar-sticky {
+    position: sticky;
+    top: 5.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.legal-card {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+}
+
+.legal-card-header {
+    padding: 0.75rem 1.25rem;
+    background-color: var(--bg-surface-elevated);
+    border-bottom: 1px solid var(--border-color);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: 0.05em;
+}
+
+.legal-toc {
+    display: flex;
+    flex-direction: column;
+}
+
+.legal-toc-link {
+    padding: 0.75rem 1.25rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    text-decoration: none;
+    border-bottom: 1px solid var(--border-subtle);
+    transition: background-color 0.15s ease, color 0.15s ease, padding-left 0.15s ease;
+}
+
+.legal-toc-link:last-child {
+    border-bottom: none;
+}
+
+.legal-toc-link:hover {
+    background-color: var(--bg-surface-elevated);
+    color: var(--text-primary);
+    padding-left: 1.5rem;
+}
+
+.legal-card-body {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+}
+
+.meta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-subtle);
+    padding-bottom: 0.5rem;
+}
+
+.meta-row:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.meta-label {
+    color: var(--text-muted);
+    font-size: 0.76rem;
+}
+
+.meta-value {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.meta-value.status-active {
+    color: #4ade80;
+}
+
+.meta-link {
+    color: var(--text-primary);
+    text-decoration: underline;
+}
+
+@media (max-width: 1080px) {
+    .legal-grid {
+        grid-template-columns: 1fr;
+        gap: 3.5rem;
+    }
+    .legal-sidebar {
+        order: -1;
+    }
+    .legal-sidebar-sticky {
+        position: static;
     }
 }

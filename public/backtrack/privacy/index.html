@@ -124,100 +124,146 @@
     </header>
 
     <!-- Main Container -->
-    <main class="main-content">
-        <!-- Hero Section -->
-        <section class="hero-section">
-            <h1 class="hero-heading">
-                <span class="line">privacy</span>
-                <span class="line"><span class="highlight-text">policy.</span></span>
-            </h1>
+    <main class="main-content legal-grid">
+        <div class="legal-main">
+            <!-- Hero Section -->
+            <section class="hero-section">
+                <h1 class="hero-heading">
+                    <span class="line">privacy</span>
+                    <span class="line"><span class="highlight-text">policy.</span></span>
+                </h1>
 
-            <p class="hero-subtitle">
-                Last updated: September 2026. Backtrack and the Backtrack Stream Deck Plugin are designed with user privacy and local control as core principles.
-            </p>
-        </section>
-
-        <!-- Document Content (Clean Paragraph Editorial Style) -->
-        <div class="legal-container">
-            <!-- Section 1 -->
-            <section class="legal-section">
-                <span class="legal-section-num">01 // TELEMETRY & DATA COLLECTION</span>
-                <h2>No Data Collection or Telemetry</h2>
-                <p>
-                    Backtrack does not collect, log, track, or transmit any personal information, telemetry, usage statistics, crash metrics, or analytics to any third-party or external servers.
+                <p class="hero-subtitle">
+                    Last updated: September 2026. Backtrack and the Backtrack Stream Deck Plugin are designed with user privacy and local control as core principles.
                 </p>
             </section>
 
-            <!-- Section 2 -->
-            <section class="legal-section">
-                <span class="legal-section-num">02 // ARCHITECTURE & NETWORK COMMUNICATION</span>
-                <h2>Network Communication & Remote Features</h2>
-                <p>
-                    Backtrack operates without central cloud infrastructure. Network activity is limited strictly to user-configured connections:
-                </p>
-                <ul>
-                    <li>
-                        <strong>Local IPC & Stream Deck:</strong> By default, communication between Backtrack and its Stream Deck plugin occurs exclusively over your local computer (<code>127.0.0.1</code> loopback WebSocket IPC).
-                    </li>
-                    <li>
-                        <strong>Remote OBS Connection:</strong> If you enable <em>"OBS is on a different PC"</em>, Backtrack communicates directly with the specified host address and port over your local area network (LAN) or private VPN / Tailscale connection.
-                    </li>
-                    <li>
-                        <strong>Peer-to-Peer Clip Sharing:</strong> If you enable <em>"Share my clips with another PC"</em>, Backtrack establishes direct, authenticated point-to-point connections between your paired devices on your local network or private VPN. Video streaming, transcoding, and clip transfers travel directly between your two machines without passing through any external cloud relays or servers.
-                    </li>
-                </ul>
-            </section>
+            <!-- Document Articles (Clean Left-Aligned Paragraph Editorial Style) -->
+            <div class="legal-articles">
+                <!-- Section 1 -->
+                <section class="legal-section" id="section-1">
+                    <span class="legal-section-num">01 // TELEMETRY & DATA COLLECTION</span>
+                    <h2>No Data Collection or Telemetry</h2>
+                    <p>
+                        Backtrack does not collect, log, track, or transmit any personal information, telemetry, usage statistics, crash metrics, or analytics to any third-party or external servers.
+                    </p>
+                </section>
 
-            <!-- Section 3 -->
-            <section class="legal-section">
-                <span class="legal-section-num">03 // LOCAL STORAGE</span>
-                <h2>Media Storage & Ownership</h2>
-                <p>
-                    All screen recordings, replay buffers, audio files, bookmarks, metadata, and video clips remain entirely on your local storage devices (or transfer exclusively to your designated paired machines). Nothing is ever uploaded to cloud servers without your explicit action.
-                </p>
-            </section>
+                <!-- Section 2 -->
+                <section class="legal-section" id="section-2">
+                    <span class="legal-section-num">02 // ARCHITECTURE & NETWORK COMMUNICATION</span>
+                    <h2>Network Communication & Remote Features</h2>
+                    <p>
+                        Backtrack operates without central cloud infrastructure. Network activity is limited strictly to user-configured connections:
+                    </p>
+                    <ul>
+                        <li>
+                            <strong>Local IPC & Stream Deck:</strong> By default, communication between Backtrack and its Stream Deck plugin occurs exclusively over your local computer (<code>127.0.0.1</code> loopback WebSocket IPC).
+                        </li>
+                        <li>
+                            <strong>Remote OBS Connection:</strong> If you enable <em>"OBS is on a different PC"</em>, Backtrack communicates directly with the specified host address and port over your local area network (LAN) or private VPN / Tailscale connection.
+                        </li>
+                        <li>
+                            <strong>Peer-to-Peer Clip Sharing:</strong> If you enable <em>"Share my clips with another PC"</em>, Backtrack establishes direct, authenticated point-to-point connections between your paired devices on your local network or private VPN. Video streaming, transcoding, and clip transfers travel directly between your two machines without passing through any external cloud relays or servers.
+                        </li>
+                    </ul>
+                </section>
 
-            <!-- Section 4 -->
-            <section class="legal-section">
-                <span class="legal-section-num">04 // OPTIONAL INTEGRATIONS</span>
-                <h2>Google Drive Integration (Optional)</h2>
-                <p>
-                    Backtrack includes an optional feature allowing you to upload clips directly to your personal Google Drive account.
-                </p>
-                <ul>
-                    <li>
-                        <strong>Scopes Requested:</strong> Backtrack requests the <code>https://www.googleapis.com/auth/drive.file</code> and <code>https://www.googleapis.com/auth/drive.metadata.readonly</code> scopes.
-                    </li>
-                    <li>
-                        <strong>Access & Data Usage:</strong> Backtrack only accesses files and folders created by the app or explicitly selected by you. It reads folder metadata solely to let you navigate and select a destination folder in your Drive. Your email address is fetched once to display which account is signed in (and can be masked via Streamer Mode).
-                    </li>
-                    <li>
-                        <strong>Local Credential Storage:</strong> OAuth 2.0 access and refresh tokens are stored exclusively on your local computer, encrypted with the Windows Data Protection API (DPAPI). Backtrack has no servers or telemetry; your credentials and videos never pass through any third-party or developer servers.
-                    </li>
-                    <li>
-                        <strong>Data Sharing & Sale:</strong> Backtrack does not share, transfer, or sell your Google user data to any third party. Video uploads are sent directly from your computer to Google's official Drive API endpoints.
-                    </li>
-                    <li>
-                        <strong>Revocation:</strong> You can disconnect your Google account at any time by clicking "Sign out" within Backtrack's Google Drive dialog, or by revoking access in your <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener">Google Account Security Settings</a>.
-                    </li>
-                    <li>
-                        <strong>Google Limited Use Disclosure:</strong>
-                        <div class="highlight-banner">
-                            Backtrack's use and transfer to any other app of information received from Google APIs will adhere to the <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank" rel="noopener">Google API Services User Data Policy</a>, including the Limited Use requirements.
-                        </div>
-                    </li>
-                </ul>
-            </section>
+                <!-- Section 3 -->
+                <section class="legal-section" id="section-3">
+                    <span class="legal-section-num">03 // LOCAL STORAGE</span>
+                    <h2>Media Storage & Ownership</h2>
+                    <p>
+                        All screen recordings, replay buffers, audio files, bookmarks, metadata, and video clips remain entirely on your local storage devices (or transfer exclusively to your designated paired machines). Nothing is ever uploaded to cloud servers without your explicit action.
+                    </p>
+                </section>
 
-            <!-- Section 5 -->
-            <section class="legal-section">
-                <span class="legal-section-num">05 // OPEN SOURCE AUDITABILITY</span>
-                <h2>Open Source</h2>
-                <p>
-                    Backtrack is fully open source. You can independently review the entire source code, network implementations, and RPC protocols on GitHub at <a href="https://github.com/ilyambr/backtrack" target="_blank" rel="noopener">https://github.com/ilyambr/backtrack</a>.
-                </p>
-            </section>
+                <!-- Section 4 -->
+                <section class="legal-section" id="section-4">
+                    <span class="legal-section-num">04 // OPTIONAL INTEGRATIONS</span>
+                    <h2>Google Drive Integration (Optional)</h2>
+                    <p>
+                        Backtrack includes an optional feature allowing you to upload clips directly to your personal Google Drive account.
+                    </p>
+                    <ul>
+                        <li>
+                            <strong>Scopes Requested:</strong> Backtrack requests the <code>https://www.googleapis.com/auth/drive.file</code> and <code>https://www.googleapis.com/auth/drive.metadata.readonly</code> scopes.
+                        </li>
+                        <li>
+                            <strong>Access & Data Usage:</strong> Backtrack only accesses files and folders created by the app or explicitly selected by you. It reads folder metadata solely to let you navigate and select a destination folder in your Drive. Your email address is fetched once to display which account is signed in (and can be masked via Streamer Mode).
+                        </li>
+                        <li>
+                            <strong>Local Credential Storage:</strong> OAuth 2.0 access and refresh tokens are stored exclusively on your local computer, encrypted with the Windows Data Protection API (DPAPI). Backtrack has no servers or telemetry; your credentials and videos never pass through any third-party or developer servers.
+                        </li>
+                        <li>
+                            <strong>Data Sharing & Sale:</strong> Backtrack does not share, transfer, or sell your Google user data to any third party. Video uploads are sent directly from your computer to Google's official Drive API endpoints.
+                        </li>
+                        <li>
+                            <strong>Revocation:</strong> You can disconnect your Google account at any time by clicking "Sign out" within Backtrack's Google Drive dialog, or by revoking access in your <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener">Google Account Security Settings</a>.
+                        </li>
+                        <li>
+                            <strong>Google Limited Use Disclosure:</strong>
+                            <div class="highlight-banner">
+                                Backtrack's use and transfer to any other app of information received from Google APIs will adhere to the <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank" rel="noopener">Google API Services User Data Policy</a>, including the Limited Use requirements.
+                            </div>
+                        </li>
+                    </ul>
+                </section>
+
+                <!-- Section 5 -->
+                <section class="legal-section" id="section-5">
+                    <span class="legal-section-num">05 // OPEN SOURCE AUDITABILITY</span>
+                    <h2>Open Source</h2>
+                    <p>
+                        Backtrack is fully open source. You can independently review the entire source code, network implementations, and RPC protocols on GitHub at <a href="https://github.com/ilyambr/backtrack" target="_blank" rel="noopener">https://github.com/ilyambr/backtrack</a>.
+                    </p>
+                </section>
+            </div>
         </div>
+
+        <!-- Sticky Sidebar on the right -->
+        <aside class="legal-sidebar">
+            <div class="legal-sidebar-sticky">
+                <!-- Table of Contents -->
+                <div class="legal-card">
+                    <div class="legal-card-header">
+                        <span class="legal-card-title">INDEX // SECTIONS</span>
+                    </div>
+                    <nav class="legal-toc">
+                        <a href="#section-1" class="legal-toc-link">01 // TELEMETRY & DATA</a>
+                        <a href="#section-2" class="legal-toc-link">02 // NETWORK ARCHITECTURE</a>
+                        <a href="#section-3" class="legal-toc-link">03 // MEDIA STORAGE</a>
+                        <a href="#section-4" class="legal-toc-link">04 // GOOGLE DRIVE</a>
+                        <a href="#section-5" class="legal-toc-link">05 // OPEN SOURCE</a>
+                    </nav>
+                </div>
+
+                <!-- Document Info Card -->
+                <div class="legal-card">
+                    <div class="legal-card-header">
+                        <span class="legal-card-title">DOCUMENT // METADATA</span>
+                    </div>
+                    <div class="legal-card-body">
+                        <div class="meta-row">
+                            <span class="meta-label">LAST UPDATED:</span>
+                            <span class="meta-value">September 2026</span>
+                        </div>
+                        <div class="meta-row">
+                            <span class="meta-label">TELEMETRY:</span>
+                            <span class="meta-value status-active">0% (ZERO)</span>
+                        </div>
+                        <div class="meta-row">
+                            <span class="meta-label">ARCHITECTURE:</span>
+                            <span class="meta-value">100% LOCAL</span>
+                        </div>
+                        <div class="meta-row">
+                            <span class="meta-label">SOURCE:</span>
+                            <a href="https://github.com/ilyambr/backtrack" target="_blank" rel="noopener" class="meta-link">ilyambr/backtrack</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
     </main>
 
     <!-- Footer -->
@@ -242,12 +288,13 @@
         </div>
     </footer>
 
-    <!-- Dog Avatar Floating Profile Link -->
-    <a href="https://github.com/ilyambr" target="_blank" rel="noopener" class="dog-avatar-anchor no-cursor-snap" aria-label="Ilya's GitHub Profile" title="github.com/ilyambr">
+    <!-- Dog / Cat Avatar Floating Profile Link -->
+    <a href="https://ilyambr.com/dog" class="dog-avatar-anchor no-cursor-snap" aria-label="Dog Avatar (ilyambr.com/dog)" title="ilyambr.com/dog">
         <img src="/backtrack/dog-avatar.png" alt="Dog Avatar">
     </a>
 
     <!-- Scripts -->
+    <script src="/backtrack/pet-avatar.js"></script>
     <script src="/backtrack/cursor.js"></script>
     <script src="/backtrack/glitch-trail.js"></script>
 </body>
