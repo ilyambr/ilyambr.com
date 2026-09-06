@@ -951,3 +951,49 @@ body {
         height: 380px;
     }
 }
+
+/* ==========================================================================
+   Dog Avatar Anchor (Bottom-Right Floating Profile)
+   ========================================================================== */
+.dog-avatar-anchor {
+    position: fixed;
+    bottom: 1.75rem;
+    right: 1.75rem;
+    z-index: 99998;
+    width: 82px;
+    height: 82px;
+    display: block;
+    cursor: pointer;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), filter 0.25s ease;
+    user-select: none;
+}
+
+.dog-avatar-anchor img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.8));
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dog-avatar-anchor:hover {
+    transform: scale(1.12) translateY(-4px);
+}
+
+.dog-avatar-anchor:hover img {
+    filter: drop-shadow(0 10px 22px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 12px rgba(255, 255, 255, 0.3));
+}
+
+.dog-avatar-anchor:active {
+    transform: scale(0.95);
+}
+
+@media (max-width: 768px) {
+    .dog-avatar-anchor {
+        width: 60px;
+        height: 60px;
+        bottom: 1.25rem;
+        right: 1.25rem;
+    }
+}
