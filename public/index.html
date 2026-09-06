@@ -4,34 +4,71 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>do you like?</title>
+
+  <!-- Google Fonts: Space Grotesk & Space Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
   <style>
-    * {
-      box-sizing: border-box;
+    :root {
+      --bg-primary: #101113;
+      --bg-surface: #16181a;
+      --bg-surface-elevated: #181a1e;
+      --border-color: #26292e;
+      --border-subtle: #1c1e22;
+      --border-medium: rgba(255, 255, 255, 0.15);
+
+      --text-primary: #f5f6f8;
+      --text-secondary: #aeb4bd;
+      --text-muted: #767d87;
+
+      --cursor-bg: rgba(255, 255, 255, 0.16);
+      --cursor-border: rgba(255, 255, 255, 0.55);
+      --cursor-blur: 6px;
+
+      --font-main: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'Space Mono', monospace;
+    }
+
+    /* Zero rounded corners */
+    *:not(.custom-cursor), *:not(.custom-cursor)::before, *:not(.custom-cursor)::after {
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
+      border-radius: 0 !important;
+    }
+
+    *, *::before, *::after, html, body, a, button, input {
+      cursor: none !important;
     }
 
     html, body {
       height: 100%;
       height: 100dvh;
       overflow: hidden;
+      background-color: var(--bg-primary);
     }
 
     body {
-      background-color: #ffffff;
-      color: #000000;
-      font-family: "Times New Roman", Times, serif;
+      color: var(--text-primary);
+      font-family: var(--font-main);
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       padding: 2vh 3vw;
       text-align: center;
+      position: relative;
+      -webkit-font-smoothing: antialiased;
     }
 
     h1 {
+      font-family: var(--font-main);
       font-size: clamp(36px, 5.5vh, 64px);
-      font-weight: normal;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--text-primary);
       margin-bottom: 2vh;
     }
 
@@ -49,14 +86,17 @@
       flex-direction: column;
       align-items: center;
       text-decoration: none;
-      color: #000000;
-      cursor: pointer;
+      color: var(--text-primary);
     }
 
     .choice h2 {
+      font-family: var(--font-main);
       font-size: clamp(24px, 4vh, 44px);
-      font-weight: normal;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--text-secondary);
       margin-bottom: 1.5vh;
+      transition: color 0.2s ease;
     }
 
     .choice img {
@@ -64,13 +104,26 @@
       height: min(42vw, 56vh);
       aspect-ratio: 1 / 1;
       object-fit: cover;
-      border: 1px solid #000000;
-      background-color: #f0f0f0;
+      border: 1px solid var(--border-color);
+      background-color: var(--bg-surface);
       display: block;
+      transition: border-color 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                  box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .choice:hover h2 {
-      text-decoration: underline;
+      color: #ffffff;
+    }
+
+    .choice:hover img {
+      border-color: rgba(255, 255, 255, 0.35);
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.1);
+      transform: translateY(-3px);
+    }
+
+    .choice:active img {
+      transform: translateY(-1px);
     }
 
     footer {
@@ -85,25 +138,102 @@
       width: auto;
       max-width: 80vw;
       object-fit: contain;
-      filter: invert(1);
-      opacity: 0.85;
+      filter: none;
+      opacity: 0.75;
+      transition: opacity 0.2s ease;
       display: block;
+    }
+
+    .footer-logo:hover {
+      opacity: 1;
+    }
+
+    /* Custom Cursor */
+    .custom-cursor {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      position: fixed;
+      pointer-events: none;
+      z-index: 99999;
+      background-color: var(--cursor-bg);
+      -webkit-backdrop-filter: blur(var(--cursor-blur));
+      backdrop-filter: blur(var(--cursor-blur));
+      transform: translate(-18px, -18px);
+      transition: opacity 0.15s ease,
+                  backdrop-filter 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                  -webkit-backdrop-filter 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                  background-color 0.25s ease,
+                  border-color 0.25s ease;
+      border: 1px solid transparent;
+      will-change: transform, width, height, border-radius, left, top;
+    }
+
+    .custom-cursor.cursor-morph,
+    .custom-cursor.cursor-small {
+      background-color: transparent !important;
+      border: 1.25px solid var(--cursor-border) !important;
+      -webkit-backdrop-filter: blur(0px) brightness(1) !important;
+      backdrop-filter: blur(0px) brightness(1) !important;
+      border-radius: 0px !important;
+    }
+
+    .custom-cursor.cursor-hide {
+      opacity: 0 !important;
+    }
+
+    /* Glitch Trail Container */
+    .glitch-mouse-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 99990;
+      overflow: hidden;
+    }
+
+    .glitch-mouse-glyph {
+      position: absolute;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      pointer-events: none;
+      transform: translate(-50%, -50%) rotate(var(--rotation, 0deg)) scale(var(--scale, 1));
+      opacity: 0;
+      transition: opacity 0.15s ease-out;
+      user-select: none;
+      will-change: transform, opacity;
+    }
+
+    /* Mobile & Touch Fallback */
+    @media (pointer: coarse) and (hover: none) {
+      *, *::before, *::after, html, body, a, button, input {
+        cursor: auto !important;
+      }
+      .custom-cursor {
+        display: none !important;
+      }
     }
   </style>
 </head>
-<body>
+<body class="glitch-mouse-trail">
+
+  <div class="custom-cursor"></div>
 
   <h1>do you like?</h1>
 
   <div class="container">
     <!-- Left Side: Dogs -->
-    <a href="/dog" class="choice">
+    <a href="/dog" class="choice no-cursor-snap">
       <h2>Dogs</h2>
       <img src="dog.jpg" alt="Dog">
     </a>
 
     <!-- Right Side: Cats -->
-    <a href="/cat" class="choice">
+    <a href="/cat" class="choice no-cursor-snap">
       <h2>Cats</h2>
       <img src="cat.jpg" alt="Cat">
     </a>
@@ -113,5 +243,7 @@
     <img src="ilyambr.png" alt="ilyambr" class="footer-logo">
   </footer>
 
+  <script src="/backtrack/cursor.js"></script>
+  <script src="/backtrack/glitch-trail.js"></script>
 </body>
 </html>
