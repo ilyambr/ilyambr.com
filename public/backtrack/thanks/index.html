@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Special Thanks — Backtrack</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="/backtrack/styles.css">
+    <style>
+        .credits-container {
+            max-width: 820px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 3.5rem;
+        }
+
+        .credits-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+            padding-bottom: 2.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .credits-section:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .credits-section-num {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .credits-section h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+        }
+
+        .credits-section p {
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+    </style>
+</head>
+<body class="glitch-mouse-trail">
+    <!-- Custom Morphing Magnetic Cursor -->
+    <div class="custom-cursor"></div>
+
+    <!-- Header Navigation -->
+    <header class="site-header">
+        <div class="header-logo">
+            <nav class="header-breadcrumb" aria-label="Breadcrumb">
+                <a href="/" class="header-breadcrumb-item header-brand-root" title="ilyambr.com">
+                    <img src="/ilyambr.png" alt="ilyambr" class="ilyambr-text-logo">
+                </a>
+                <span class="header-breadcrumb-slash">/</span>
+                <a href="/backtrack/" class="header-breadcrumb-item" title="Backtrack">
+                    <img src="/backtrack/backtrack-text-logo.png" alt="Backtrack" class="backtrack-text-logo">
+                </a>
+                <span class="header-breadcrumb-slash">/</span>
+                <span class="header-breadcrumb-page">special thanks</span>
+            </nav>
+        </div>
+        <nav class="header-nav">
+            <a href="/backtrack/" class="nav-link">home</a>
+            <a href="https://docs.ilyambr.com/backtrack" class="nav-link" target="_blank" rel="noopener">docs</a>
+            <a href="/backtrack/privacy/" class="nav-link">privacy</a>
+            <a href="/backtrack/terms/" class="nav-link">terms</a>
+            <a href="https://github.com/ilyambr/backtrack" class="nav-link" target="_blank" rel="noopener">github</a>
+        </nav>
+    </header>
+
+    <!-- Main Container -->
+    <main class="main-content legal-grid">
+        <div class="legal-main">
+            <!-- Hero Section -->
+            <section class="hero-section">
+                <h1 class="hero-heading">
+                    <span class="line">special</span>
+                    <span class="line"><span class="highlight-text">thanks.</span></span>
+                </h1>
+
+                <p class="hero-subtitle">
+                    Acknowledgements for the people, tools, and autonomous AI systems that contributed to building and testing Backtrack.
+                </p>
+            </section>
+
+            <!-- Credits List -->
+            <div class="credits-list">
+                <!-- Claude Code -->
+                <a href="https://claude.ai/code" target="_blank" rel="noopener" class="credit-card" title="Claude Code">
+                    <div class="credit-entity">
+                        <div class="credit-avatar-wrapper">
+                            <img src="/backtrack/claude-icon.svg" alt="Claude Code" class="credit-avatar-img contain-fit">
+                        </div>
+                        <div class="credit-info">
+                            <div class="credit-name-row">
+                                <span class="credit-name">Claude Code</span>
+                                <span class="credit-tag agent-tag">AI Agent</span>
+                            </div>
+                            <p class="credit-desc">Autonomous coding agent by Anthropic powering architecture, core codebase engineering, and website features.</p>
+                        </div>
+                    </div>
+                    <div class="credit-action-arrow">&rarr;</div>
+                </a>
+
+                <!-- Google Antigravity -->
+                <a href="https://deepmind.google/technologies/gemini/" target="_blank" rel="noopener" class="credit-card" title="Google Antigravity">
+                    <div class="credit-entity">
+                        <div class="credit-avatar-wrapper">
+                            <img src="/backtrack/google-antigravity-icon.png" alt="Google Antigravity" class="credit-avatar-img contain-fit">
+                        </div>
+                        <div class="credit-info">
+                            <div class="credit-name-row">
+                                <span class="credit-name">Google Antigravity</span>
+                                <span class="credit-tag agent-tag">AI Agent</span>
+                            </div>
+                            <p class="credit-desc">Advanced agentic coding environment by Google DeepMind powering design iteration and web deployments.</p>
+                        </div>
+                    </div>
+                    <div class="credit-action-arrow">&rarr;</div>
+                </a>
+
+                <!-- BAMS -->
+                <a href="https://www.youtube.com/@BAMS" target="_blank" rel="noopener" class="credit-card" title="BAMS on YouTube">
+                    <div class="credit-entity">
+                        <div class="credit-avatar-wrapper">
+                            <img src="/backtrack/bams-avatar.jpg" alt="BAMS" class="credit-avatar-img">
+                        </div>
+                        <div class="credit-info">
+                            <div class="credit-name-row">
+                                <span class="credit-name">BAMS</span>
+                                <span class="credit-tag tester-tag">Alpha Tester</span>
+                            </div>
+                            <p class="credit-desc">Early gameplay stress testing, HUD overlay feedback, and replay buffer validation in active competitive sessions.</p>
+                        </div>
+                    </div>
+                    <div class="credit-action-arrow">&rarr;</div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Sticky Sidebar on the right -->
+        <aside class="legal-sidebar">
+            <div class="legal-sidebar-sticky">
+                <!-- Info Card -->
+                <div class="legal-card">
+                    <div class="legal-card-header">
+                        <span class="legal-card-title">CONTRIBUTORS // ROLES</span>
+                    </div>
+                    <div class="legal-card-body">
+                        <div class="meta-row">
+                            <span class="meta-label">AI ARCHITECTURE:</span>
+                            <span class="meta-value">Claude Code</span>
+                        </div>
+                        <div class="meta-row">
+                            <span class="meta-label">AI ENGINEERING:</span>
+                            <span class="meta-value">Google Antigravity</span>
+                        </div>
+                        <div class="meta-row">
+                            <span class="meta-label">ALPHA TESTING:</span>
+                            <span class="meta-value">BAMS</span>
+                        </div>
+                        <div class="meta-row">
+                            <span class="meta-label">CREATOR / LEAD:</span>
+                            <a href="https://github.com/ilyambr" target="_blank" rel="noopener" class="meta-link">ilyambr</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Documentation & Repo Card -->
+                <div class="legal-card">
+                    <div class="legal-card-header">
+                        <span class="legal-card-title">PROJECT // LINKS</span>
+                    </div>
+                    <div class="legal-card-body">
+                        <div class="meta-row">
+                            <span class="meta-label">REPOSITORY:</span>
+                            <a href="https://github.com/ilyambr/backtrack" target="_blank" rel="noopener" class="meta-link">ilyambr/backtrack</a>
+                        </div>
+                        <div class="meta-row">
+                            <span class="meta-label">DOCUMENTATION:</span>
+                            <a href="https://docs.ilyambr.com/backtrack" target="_blank" rel="noopener" class="meta-link">docs.ilyambr.com</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <nav class="header-breadcrumb" aria-label="Footer Breadcrumb">
+                    <a href="/" class="header-breadcrumb-item header-brand-root" title="ilyambr.com">
+                        <img src="/ilyambr.png" alt="ilyambr" class="ilyambr-text-logo">
+                    </a>
+                    <span class="header-breadcrumb-slash">/</span>
+                    <a href="/backtrack/" class="header-breadcrumb-item" title="Backtrack">
+                        <img src="/backtrack/backtrack-text-logo.png" alt="Backtrack" class="backtrack-text-logo">
+                    </a>
+                </nav>
+            </div>
+            <div class="footer-links" style="display: flex; gap: 1.5rem;">
+                <a href="/backtrack/thanks/">special thanks</a>
+                <a href="/backtrack/privacy/">privacy policy</a>
+                <a href="/backtrack/terms/">terms of service</a>
+                <a href="https://docs.ilyambr.com/backtrack" target="_blank" rel="noopener">documentation</a>
+                <a href="https://github.com/ilyambr/backtrack" target="_blank" rel="noopener">github</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Dog / Cat Avatar Floating Profile Link -->
+    <a href="https://ilyambr.com/dog" target="_blank" rel="noopener" class="dog-avatar-anchor no-cursor-snap" aria-label="Dog Avatar (ilyambr.com/dog)" title="ilyambr.com/dog">
+        <img src="/backtrack/dog-avatar.png" alt="Dog Avatar">
+    </a>
+
+    <!-- Scripts -->
+    <script src="/backtrack/pet-avatar.js"></script>
+    <script src="/backtrack/cursor.js"></script>
+    <script src="/backtrack/glitch-trail.js"></script>
+</body>
+</html>

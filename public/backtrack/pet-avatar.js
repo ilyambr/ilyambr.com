@@ -31,6 +31,8 @@
         }
 
         function setPet(type) {
+            anchor.setAttribute('target', '_blank');
+            anchor.setAttribute('rel', 'noopener');
             if (type === 'cat') {
                 img.src = CAT_IMG;
                 img.alt = 'Cat Avatar';

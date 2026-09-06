@@ -1251,3 +1251,135 @@ body {
         position: static;
     }
 }
+
+/* ==========================================================================
+   Special Thanks / Credits Page Layout
+   ========================================================================== */
+.credits-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.credit-card {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    text-decoration: none;
+    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.credit-card:hover {
+    background-color: var(--bg-surface-elevated);
+    border-color: var(--text-muted);
+}
+
+.credit-entity {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+}
+
+.credit-avatar-wrapper {
+    width: 64px;
+    height: 64px;
+    flex-shrink: 0;
+    background-color: #0b0c0e;
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.credit-avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.credit-avatar-img.contain-fit {
+    width: 70%;
+    height: 70%;
+    object-fit: contain;
+}
+
+.credit-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.credit-name-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.credit-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.01em;
+}
+
+.credit-tag {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.5rem;
+    background-color: var(--bg-surface-elevated);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+}
+
+.credit-tag.agent-tag {
+    color: #60a5fa;
+    border-color: rgba(96, 165, 250, 0.3);
+    background-color: rgba(59, 130, 246, 0.08);
+}
+
+.credit-tag.tester-tag {
+    color: #f472b6;
+    border-color: rgba(244, 114, 182, 0.3);
+    background-color: rgba(236, 72, 153, 0.08);
+}
+
+.credit-desc {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+.credit-action-arrow {
+    font-family: var(--font-mono);
+    font-size: 1.25rem;
+    color: var(--text-muted);
+    transition: transform 0.2s ease, color 0.2s ease;
+    padding-right: 0.5rem;
+}
+
+.credit-card:hover .credit-action-arrow {
+    transform: translateX(4px);
+    color: var(--text-primary);
+}
+
+@media (max-width: 600px) {
+    .credit-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    .credit-action-arrow {
+        display: none;
+    }
+}
