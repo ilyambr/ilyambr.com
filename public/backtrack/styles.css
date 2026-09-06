@@ -1044,9 +1044,24 @@ body {
     transform: none !important;
 }
 
+/* Cat Avatar overrides (lower, larger, and desaturated black aesthetic) */
+.dog-avatar-anchor.is-cat {
+    width: 190px;
+    bottom: -18px;
+}
+
+.dog-avatar-anchor.is-cat img {
+    filter: drop-shadow(0 -4px 14px rgba(0, 0, 0, 0.65)) saturate(0.1) brightness(0.76) contrast(1.2);
+}
+
 @media (max-width: 768px) {
     .dog-avatar-anchor {
         width: 110px;
+        right: 1rem;
+    }
+    .dog-avatar-anchor.is-cat {
+        width: 135px;
+        bottom: -12px;
         right: 1rem;
     }
 }

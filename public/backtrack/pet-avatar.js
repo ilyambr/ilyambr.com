@@ -37,6 +37,7 @@
                 anchor.href = CAT_URL;
                 anchor.title = 'ilyambr.com/cat';
                 anchor.setAttribute('aria-label', 'Cat Avatar (ilyambr.com/cat)');
+                anchor.classList.add('is-cat');
                 localStorage.setItem('pet_preference', 'cat');
             } else {
                 img.src = DOG_IMG;
@@ -44,6 +45,7 @@
                 anchor.href = DOG_URL;
                 anchor.title = 'ilyambr.com/dog';
                 anchor.setAttribute('aria-label', 'Dog Avatar (ilyambr.com/dog)');
+                anchor.classList.remove('is-cat');
                 localStorage.setItem('pet_preference', 'dog');
             }
         }
