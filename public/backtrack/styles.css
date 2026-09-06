@@ -226,8 +226,17 @@ body {
 }
 
 .footer-brand .ilyambr-text-logo {
-    height: 16px;
-    opacity: 0.75;
+    height: 24px;
+    opacity: 0.95;
+}
+
+.footer-brand .backtrack-text-logo {
+    height: 24px;
+}
+
+.footer-brand .header-breadcrumb-slash {
+    font-size: 1.15rem;
+    opacity: 0.6;
 }
 
 .header-breadcrumb-slash {
@@ -1004,7 +1013,7 @@ body {
     bottom: 0;
     right: 2rem;
     z-index: 99998;
-    width: 155px;
+    width: 180px;
     height: auto;
     display: block;
     line-height: 0;
@@ -1056,7 +1065,7 @@ body {
 
 @media (max-width: 768px) {
     .dog-avatar-anchor {
-        width: 110px;
+        width: 130px;
         right: 1rem;
     }
     .dog-avatar-anchor.is-cat {
