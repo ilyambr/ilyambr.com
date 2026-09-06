@@ -1,6 +1,6 @@
 /**
  * Magnetic & Morphing Frosted Glass Cursor Engine
- * Replicating the handcrafted cubic-bezier physics and magnetic snapping from lilguy.net
+ * Replicating handcrafted cursor dynamics with Backtrack square theme & link snapping
  */
 
 (function () {
@@ -13,31 +13,49 @@
     const cursor = document.querySelector('.custom-cursor');
     if (!cursor) return;
 
+    // Automatically mark all interactive links, buttons, and inputs for magnetic snapping
+    function markInteractiveElements() {
+        document.querySelectorAll('a, button, input, select, textarea, [role="button"]').forEach(el => {
+            if (!el.classList.contains('cursor-hover')) {
+                el.classList.add('cursor-hover');
+            }
+            if (!el.dataset.cursorStyle) {
+                el.dataset.cursorStyle = 'square';
+            }
+        });
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', markInteractiveElements);
+    } else {
+        markInteractiveElements();
+    }
+
     // State Variables
     let hp = 0.0;
     let hovering = false;
     let magneticEnabled = true;
 
-    // Start Coordinates & Dimensions
-    let startTransformX = -20.0;
-    let startTransformY = -20.0;
-    let startWidth = 40.0;
-    let startHeight = 40.0;
-    let startBorderRadius = 20.0;
+    // Start Coordinates & Dimensions (default square box: 32x32, borderRadius 0)
+    let startTransformX = -16.0;
+    let startTransformY = -16.0;
+    let startWidth = 32.0;
+    let startHeight = 32.0;
+    let startBorderRadius = 0.0;
 
     // Current Interpolated Values
-    let currentTransformX = -20.0;
-    let currentTransformY = -20.0;
-    let currentWidth = 40.0;
-    let currentHeight = 40.0;
-    let currentBorderRadius = 20.0;
+    let currentTransformX = -16.0;
+    let currentTransformY = -16.0;
+    let currentWidth = 32.0;
+    let currentHeight = 32.0;
+    let currentBorderRadius = 0.0;
 
     // Target Values
-    let targetTransformX = -20.0;
-    let targetTransformY = -20.0;
-    let targetWidth = 40.0;
-    let targetHeight = 40.0;
-    let targetBorderRadius = 20.0;
+    let targetTransformX = -16.0;
+    let targetTransformY = -16.0;
+    let targetWidth = 32.0;
+    let targetHeight = 32.0;
+    let targetBorderRadius = 0.0;
 
     // Magnetic Physical Tug on the Hovered Element
     let elementStartTransformX = 0.0;
@@ -48,24 +66,30 @@
     let elementTargetTransformY = 0.0;
 
     let prevHoveredElement = null;
-    const hTickCount = 18; // 18 frames duration
+    const hTickCount = 16;
     let lastCursorFrameTime = performance.now();
 
     /**
-     * Custom Cubic-Bezier numerical solver
-     * Matches cubic-bezier(0.38, 0.05, 0, 1) - snappy organic fly-in curve
+     * Custom Cubic-Bezier numerical solver: cubic-bezier(0.38, 0.05, 0, 1)
      */
     function cursorEase(t) {
         if (t <= 0) return 0;
         if (t >= 1) return 1;
-        let lo = 0, hi = 1, mid;
-        for (let i = 0; i < 20; i++) {
-            mid = (lo + hi) / 2;
-            const x = 3 * 0.38 * mid * (1 - mid) * (1 - mid) + 3 * 0 * mid * mid * (1 - mid) + mid * mid * mid;
-            if (x < t) lo = mid; else hi = mid;
+
+        let low = 0;
+        let high = 1;
+        let mid = t;
+
+        for (let i = 0; i < 8; i++) {
+            const currentT = 3 * (1 - mid) * (1 - mid) * mid * 0.38 + 3 * (1 - mid) * mid * mid * 0 + mid * mid * mid;
+            if (Math.abs(currentT - t) < 0.001) break;
+            if (currentT < t) low = mid;
+            else high = mid;
+            mid = (low + high) / 2;
         }
-        mid = (lo + hi) / 2;
-        return 3 * 0.05 * mid * (1 - mid) * (1 - mid) + 3 * 1 * mid * mid * (1 - mid) + mid * mid * mid;
+
+        const u = mid;
+        return 3 * (1 - u) * (1 - u) * u * 0.05 + 3 * (1 - u) * u * u * 1.0 + u * u * u;
     }
 
     // Hide initially until mouse enters window
@@ -84,19 +108,17 @@
         hp = Math.min(1.0, hp + (tickAmount / hTickCount));
         const hpEase = cursorEase(hp);
 
-        // Interpolate cursor dimensions and translation
         currentTransformX = startTransformX + (targetTransformX - startTransformX) * hpEase;
         currentTransformY = startTransformY + (targetTransformY - startTransformY) * hpEase;
         currentWidth = startWidth + (targetWidth - startWidth) * hpEase;
         currentHeight = startHeight + (targetHeight - startHeight) * hpEase;
-        currentBorderRadius = startBorderRadius + (targetBorderRadius - startBorderRadius) * hpEase;
+        currentBorderRadius = 0; // Strict zero rounded corners
 
         cursor.style.transform = `translate(${currentTransformX}px, ${currentTransformY}px)`;
         cursor.style.width = `${currentWidth}px`;
         cursor.style.height = `${currentHeight}px`;
-        cursor.style.borderRadius = `${currentBorderRadius}px`;
+        cursor.style.borderRadius = `0px`;
 
-        // Interpolate physical magnetic pull on hovered button/element
         elementCurrentTransformX = elementStartTransformX + (elementTargetTransformX - elementStartTransformX) * hpEase;
         elementCurrentTransformY = elementStartTransformY + (elementTargetTransformY - elementStartTransformY) * hpEase;
 
@@ -135,11 +157,11 @@
         cursor.style.top = `${e.clientY}px`;
 
         if (!magneticEnabled) {
-            targetTransformX = -20;
-            targetTransformY = -20;
-            targetWidth = 40;
-            targetHeight = 40;
-            targetBorderRadius = 20;
+            targetTransformX = -16;
+            targetTransformY = -16;
+            targetWidth = 32;
+            targetHeight = 32;
+            targetBorderRadius = 0;
             elementTargetTransformX = 0;
             elementTargetTransformY = 0;
             cursor.classList.remove('cursor-morph');
@@ -147,28 +169,27 @@
             return;
         }
 
-        // Find closest .cursor-hover element
+        // Find closest .cursor-hover or interactive link/button element
         let hoveredElement = document.elementFromPoint(e.clientX, e.clientY);
-        while (hoveredElement && !hoveredElement.classList.contains('cursor-hover')) {
+        while (hoveredElement && !hoveredElement.classList.contains('cursor-hover') && hoveredElement.tagName !== 'A' && hoveredElement.tagName !== 'BUTTON') {
             hoveredElement = hoveredElement.parentElement;
         }
 
-        if (hoveredElement && hoveredElement.classList.contains('cursor-hover')) {
+        if (hoveredElement) {
             if (!hovering) {
                 hovering = true;
-                if (trailContainer) trailContainer.style.display = 'none'; // Suppress trail when hovering
+                if (trailContainer) trailContainer.style.display = 'none';
 
                 hp = 0.0;
                 startTransformX = currentTransformX;
                 startTransformY = currentTransformY;
                 startWidth = currentWidth;
                 startHeight = currentHeight;
-                startBorderRadius = currentBorderRadius;
+                startBorderRadius = 0;
                 elementStartTransformX = elementCurrentTransformX;
                 elementStartTransformY = elementCurrentTransformY;
             }
 
-            // Reset transform if target element changed
             if (prevHoveredElement && prevHoveredElement !== hoveredElement) {
                 prevHoveredElement.style.transform = '';
                 elementCurrentTransformX = 0;
@@ -178,7 +199,6 @@
             }
 
             const rect = hoveredElement.getBoundingClientRect();
-            const cursorStyle = hoveredElement.dataset.cursorStyle || 'default';
             
             // Outset padding around hovered element
             const outsetX = 6;
@@ -190,33 +210,16 @@
                 height: rect.height + outsetY * 2
             };
 
-            const isSquare = cursorStyle === 'square';
-            const isPill = cursorStyle === 'pill';
-            const isCircle = cursorStyle === 'circle';
-            const isCard = cursorStyle === 'card';
-
-            const cursorFactor = isSquare ? 0.94 : 0.90;
-            const centerFactor = isSquare ? 0.06 : 0.10;
-            const elemFactor = 0.07; // Magnetic pull strength on the button
+            const cursorFactor = 0.94;
+            const centerFactor = 0.06;
+            const elemFactor = 0.06;
 
             targetTransformX = ((outsetRect.left - e.clientX) * cursorFactor) + (-0.5 * outsetRect.width * centerFactor);
             targetTransformY = ((outsetRect.top - e.clientY) * cursorFactor) + (-0.5 * outsetRect.height * centerFactor);
             targetWidth = outsetRect.width;
             targetHeight = outsetRect.height;
+            targetBorderRadius = 0; // Square corners
 
-            if (isSquare) {
-                targetBorderRadius = 0;
-            } else if (isPill) {
-                targetBorderRadius = 999;
-            } else if (isCircle) {
-                targetBorderRadius = Math.max(outsetRect.width, outsetRect.height) / 2;
-            } else if (isCard) {
-                targetBorderRadius = 12;
-            } else {
-                targetBorderRadius = 8;
-            }
-
-            // Calculate magnetic pull towards pointer
             const elementCenterX = outsetRect.left + outsetRect.width / 2;
             const elementCenterY = outsetRect.top + outsetRect.height / 2;
             elementTargetTransformX = (e.clientX - elementCenterX) * elemFactor;
@@ -227,24 +230,23 @@
         } else {
             if (hovering) {
                 hovering = false;
-                if (trailContainer) trailContainer.style.display = ''; // Restore trail
+                if (trailContainer) trailContainer.style.display = '';
 
                 hp = 0.0;
                 startTransformX = currentTransformX;
                 startTransformY = currentTransformY;
                 startWidth = currentWidth;
                 startHeight = currentHeight;
-                startBorderRadius = currentBorderRadius;
+                startBorderRadius = 0;
                 elementStartTransformX = elementCurrentTransformX;
                 elementStartTransformY = elementCurrentTransformY;
             }
 
-            // Return to default circle state
-            targetTransformX = -20;
-            targetTransformY = -20;
-            targetWidth = 40;
-            targetHeight = 40;
-            targetBorderRadius = 20;
+            targetTransformX = -16;
+            targetTransformY = -16;
+            targetWidth = 32;
+            targetHeight = 32;
+            targetBorderRadius = 0;
             elementTargetTransformX = 0.0;
             elementTargetTransformY = 0.0;
 
@@ -252,30 +254,25 @@
         }
     });
 
-    // Viewport enter / exit detection
-    document.documentElement.addEventListener('mouseout', (e) => {
-        if (e.relatedTarget == null) {
-            cursor.classList.add('cursor-hide');
-        }
+    document.addEventListener('mouseleave', () => {
+        cursor.classList.add('cursor-hide');
+        cursorRevealed = false;
     });
 
-    document.documentElement.addEventListener('mouseover', (e) => {
-        if (e.relatedTarget == null) {
-            cursor.classList.remove('cursor-hide');
-        }
+    document.addEventListener('mouseenter', () => {
+        cursor.classList.remove('cursor-hide');
+        cursorRevealed = true;
     });
 
-    // Expose engine controls for HUD
     window.cursorEngine = {
-        setMagnetic(enabled) {
+        setMagnetic: function (enabled) {
             magneticEnabled = enabled;
-            if (!enabled) {
+            if (!enabled && hovering) {
                 hovering = false;
+                if (trailContainer) trailContainer.style.display = '';
                 cursor.classList.remove('cursor-morph');
             }
         },
-        setBlur(px) {
-            document.documentElement.style.setProperty('--cursor-blur', `${px}px`);
-        }
+        refreshTargets: markInteractiveElements
     };
 })();

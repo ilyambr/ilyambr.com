@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>little guy — cursor & physics showcase</title>
+    <title>Backtrack — Instant Replay Overlay HUD for OBS</title>
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="/backtrack/styles.css">
 </head>
 <body class="glitch-mouse-trail">
     <!-- Custom Morphing Magnetic Cursor -->
@@ -19,284 +19,99 @@
     <!-- Header Navigation -->
     <header class="site-header">
         <div class="header-logo">
-            <span class="logo-mark cursor-hover" data-cursor-style="circle">✦</span>
-            <span class="logo-text glitch">lilguy.lab</span>
+            <a href="/backtrack/" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 0.75rem;">
+                <img src="/backtrack/logo.png" alt="Backtrack Logo" class="logo-img">
+                <span class="logo-text glitch">backtrack</span>
+            </a>
         </div>
         <nav class="header-nav">
-            <a href="#hero" class="nav-link cursor-hover">about</a>
-            <a href="#creature" class="nav-link cursor-hover">eyes.canvas</a>
-            <a href="#spinner" class="nav-link cursor-hover">360°.spin</a>
-            <a href="#playground" class="nav-link cursor-hover">playground</a>
-            <a href="https://docs.ilyambr.com/backtrack" class="nav-link cursor-hover" target="_blank" rel="noopener">docs</a>
-            <a href="/backtrack/privacy/" class="nav-link cursor-hover">privacy</a>
-            <a href="/backtrack/terms/" class="nav-link cursor-hover">terms</a>
-            <button id="themeToggle" class="theme-btn cursor-hover" data-cursor-style="pill" aria-label="Toggle theme">
-                <span class="theme-icon">◐</span>
-            </button>
+            <a href="https://docs.ilyambr.com/backtrack" class="nav-link" target="_blank" rel="noopener">docs</a>
+            <a href="/backtrack/privacy/" class="nav-link">privacy</a>
+            <a href="/backtrack/terms/" class="nav-link">terms</a>
+            <a href="https://github.com/ilyambr/backtrack" class="nav-link" target="_blank" rel="noopener">github</a>
         </nav>
     </header>
 
     <!-- Main Container -->
     <main class="main-content">
         <!-- Hero Section -->
-        <section id="hero" class="hero-section">
+        <section class="hero-section">
             <div class="hero-tagline-wrapper">
-                <span class="badge cursor-hover" data-cursor-style="pill">interactive mechanics</span>
+                <span class="badge">instant replay hud</span>
             </div>
             
             <h1 class="hero-heading">
-                <span class="line">when you</span>
-                <span class="line">wish upon a</span>
-                <span class="line"><span class="highlight-text">little guy.</span></span>
+                <span class="line">capture without</span>
+                <span class="line"><span class="highlight-text">alt-tabbing.</span></span>
             </h1>
 
-            <p class="hero-subtitle glitch-wrapper">
-                <span class="glitch" data-glitch="Replicating the handcrafted cursor dynamics, ASCII particle wake, and gaze physics.">
-                    Replicating the handcrafted cursor dynamics, ASCII particle wake, and gaze physics.
-                </span>
+            <p class="hero-subtitle">
+                A hotkey-summoned overlay HUD for OBS to record, save your replay buffer, and browse your clips without ever leaving your game.
             </p>
 
             <div class="hero-cta-group">
-                <a href="#playground" class="btn btn-primary cursor-hover" data-cursor-style="square">
-                    <span>Explore Sandbox</span>
-                    <svg class="btn-arrow" width="14" height="14" viewBox="0 0 14 14" fill="none">
-                        <path d="M1 7H13M13 7L7 1M13 7L7 13" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
+                <a href="https://github.com/ilyambr/backtrack/releases" class="btn btn-primary" target="_blank" rel="noopener">
+                    <span>Download Latest Release</span>
                 </a>
-                <a href="#creature" class="btn btn-secondary cursor-hover" data-cursor-style="square">
-                    <span>Meet Little Guy</span>
+                <a href="https://docs.ilyambr.com/backtrack" class="btn btn-secondary" target="_blank" rel="noopener">
+                    <span>Read Documentation</span>
                 </a>
             </div>
         </section>
 
-        <!-- Creature Gaze Tracking Canvas Section -->
-        <section id="creature" class="creature-section">
-            <div class="section-header">
-                <span class="section-label">01 // GAZE PHYSICS & CANVAS</span>
-                <h2 class="section-title">The Watchful Creature</h2>
-                <p class="section-desc">Procedural eye saccades calculated via exponential damping with randomized time constants (<span class="code-inline">τ = 50ms ~ 450ms</span>).</p>
-            </div>
-
-            <div class="creature-canvas-wrapper cursor-hover" data-cursor-style="circle" id="creatureCard">
-                <canvas id="creatureCanvas" width="600" height="600"></canvas>
-                <div class="creature-info-badge">
-                    <span class="status-dot"></span>
-                    <span id="gazeCoordinates">gaze: tracking (0, 0)</span>
-                </div>
-                <div class="creature-hint">Click creature to trigger facial expressions</div>
-            </div>
-        </section>
-
-        <!-- Interactive 360° Scrubbing Card Section -->
-        <section id="spinner" class="spinner-section">
-            <div class="section-header">
-                <span class="section-label">02 // 360° ROTATION SCRUBBER</span>
-                <h2 class="section-title">Interactive Object Spin</h2>
-                <p class="section-desc">Move your cursor horizontally across the card to scrub through physical perspectives in real time.</p>
-            </div>
-
-            <div class="spinner-grid">
-                <!-- Card 1: Starboy Orb -->
-                <div class="product-card cursor-hover" data-cursor-style="card" data-spinner="star">
-                    <div class="card-inner">
-                        <div class="card-header">
-                            <span class="card-tag">MODEL 01</span>
-                            <span class="card-price">EDITION A</span>
-                        </div>
-                        <div class="card-canvas-container">
-                            <canvas class="spin-canvas" data-type="star" width="300" height="300"></canvas>
-                        </div>
-                        <div class="card-footer">
-                            <h3 class="card-title">Starboy Core</h3>
-                            <span class="card-status">360° Drag / Scrub</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 2: Micro Prismatic Hex -->
-                <div class="product-card cursor-hover" data-cursor-style="card" data-spinner="crystal">
-                    <div class="card-inner">
-                        <div class="card-header">
-                            <span class="card-tag">MODEL 02</span>
-                            <span class="card-price">EDITION B</span>
-                        </div>
-                        <div class="card-canvas-container">
-                            <canvas class="spin-canvas" data-type="crystal" width="300" height="300"></canvas>
-                        </div>
-                        <div class="card-footer">
-                            <h3 class="card-title">Crystal Prism</h3>
-                            <span class="card-status">360° Drag / Scrub</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 3: Cyber Donut -->
-                <div class="product-card cursor-hover" data-cursor-style="card" data-spinner="torus">
-                    <div class="card-inner">
-                        <div class="card-header">
-                            <span class="card-tag">MODEL 03</span>
-                            <span class="card-price">EDITION C</span>
-                        </div>
-                        <div class="card-canvas-container">
-                            <canvas class="spin-canvas" data-type="torus" width="300" height="300"></canvas>
-                        </div>
-                        <div class="card-footer">
-                            <h3 class="card-title">Quantum Torus</h3>
-                            <span class="card-status">360° Drag / Scrub</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Interactive Playground & Magnetic Tests -->
-        <section id="playground" class="playground-section">
-            <div class="section-header">
-                <span class="section-label">03 // MAGNETIC SHAPE MORPHING</span>
-                <h2 class="section-title">Magnetic Physics Sandbox</h2>
-                <p class="section-desc">Test how the custom frosted cursor smoothly shifts geometry, borders, and backdrop filtering to envelope various UI targets.</p>
-            </div>
-
-            <div class="playground-grid">
-                <!-- Test Block 1: Square Action Buttons -->
-                <div class="test-card">
-                    <span class="test-label">Square Morph (borderRadius = 0px)</span>
-                    <div class="button-row">
-                        <button class="btn btn-sharp cursor-hover" data-cursor-style="square">Preorder [01]</button>
-                        <button class="btn btn-sharp cursor-hover" data-cursor-style="square">Confirm</button>
-                        <button class="btn btn-sharp btn-outline cursor-hover" data-cursor-style="square">Archive</button>
-                    </div>
-                </div>
-
-                <!-- Test Block 2: Pill Badges -->
-                <div class="test-card">
-                    <span class="test-label">Pill Morph (borderRadius = 999px)</span>
-                    <div class="pill-row">
-                        <span class="pill cursor-hover" data-cursor-style="pill">Stainless Steel</span>
-                        <span class="pill cursor-hover" data-cursor-style="pill">Solid Brass</span>
-                        <span class="pill cursor-hover" data-cursor-style="pill">Anodized Alu</span>
-                        <span class="pill cursor-hover" data-cursor-style="pill">Clear Poly</span>
-                    </div>
-                </div>
-
-                <!-- Test Block 3: Circular Action Icons -->
-                <div class="test-card">
-                    <span class="test-label">Circle Morph (borderRadius = 50%)</span>
-                    <div class="icon-row">
-                        <button class="icon-circle cursor-hover" data-cursor-style="circle" aria-label="Play">▶</button>
-                        <button class="icon-circle cursor-hover" data-cursor-style="circle" aria-label="Star">★</button>
-                        <button class="icon-circle cursor-hover" data-cursor-style="circle" aria-label="Heart">♥</button>
-                        <button class="icon-circle cursor-hover" data-cursor-style="circle" aria-label="Arrow">↗</button>
-                    </div>
-                </div>
-
-                <!-- Test Block 4: Input Focus Magnetism -->
-                <div class="test-card">
-                    <span class="test-label">Input & Magnetic Pull</span>
-                    <div class="input-group">
-                        <input type="email" placeholder="enter your email..." class="input-field cursor-hover" data-cursor-style="rounded">
-                        <button class="btn btn-submit cursor-hover" data-cursor-style="square">Join</button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Mechanical Breakdown / Technical Anatomy -->
+        <!-- Technical Anatomy / Features Grid -->
         <section class="anatomy-section">
             <div class="section-header">
-                <span class="section-label">04 // ARCHITECTURAL BREAKDOWN</span>
-                <h2 class="section-title">Under the Hood</h2>
+                <span class="section-label">FEATURES // ARCHITECTURE</span>
+                <h2 class="section-title">Built For Streamers & Gamers</h2>
             </div>
 
             <div class="anatomy-grid">
                 <div class="anatomy-card">
                     <div class="anatomy-num">01</div>
-                    <h3 class="anatomy-title">Bézier Physics Loop</h3>
-                    <p class="anatomy-text">A custom iterative numerical solver executes <code>cubic-bezier(0.38, 0.05, 0, 1)</code> in a 60fps <code>requestAnimationFrame</code> loop to dynamically translate, resize, and morph border radius without lag.</p>
+                    <h3 class="anatomy-title">Hotkey-Summoned HUD</h3>
+                    <p class="anatomy-text">Instantly overlay your clips, gallery, and playback controls over fullscreen games with a single customizable shortcut.</p>
                 </div>
 
                 <div class="anatomy-card">
                     <div class="anatomy-num">02</div>
-                    <h3 class="anatomy-title">Distance-Delayed Wake</h3>
-                    <p class="anatomy-text">Glitch particles spawn transparently and calculate Euclidean distance from the cursor (<code>d &gt; 28px</code>) before fading in, leaving a clean trail that never obscures the pointer tip.</p>
+                    <h3 class="anatomy-title">Zero-Lag obs-websocket</h3>
+                    <p class="anatomy-text">Communicates entirely over native obs-websocket. Never touches your scene collection or settings directly.</p>
                 </div>
 
                 <div class="anatomy-card">
                     <div class="anatomy-num">03</div>
-                    <h3 class="anatomy-title">Magnetic Vector Pull</h3>
-                    <p class="anatomy-text">Hovered buttons calculate an offset delta vector from their center to the cursor, applying a gentle physical tug (<code>5% - 8%</code>) to the element itself.</p>
+                    <h3 class="anatomy-title">Peer-to-Peer Remote Sync</h3>
+                    <p class="anatomy-text">Pair dual-PC streaming setups over LAN or Tailscale. Stream video and trigger clip saves with zero cloud relays.</p>
                 </div>
 
                 <div class="anatomy-card">
                     <div class="anatomy-num">04</div>
-                    <h3 class="anatomy-title">Asynchronous Saccades</h3>
-                    <p class="anatomy-text">Creature eyes apply exponential decay with individual time constants (<code>tau</code>) so gaze movements follow the cursor with lifelike, natural micro-delays.</p>
+                    <h3 class="anatomy-title">Stream Deck Plugin</h3>
+                    <p class="anatomy-text">Native two-way WebSocket IPC integration with live recording timers, clip indicators, and chapter star bookmarks.</p>
                 </div>
             </div>
         </section>
     </main>
 
-    <!-- Floating Live Control Panel (HUD) -->
-    <aside class="control-panel" id="controlPanel">
-        <div class="panel-header">
-            <span class="panel-title">LIVE CONTROLS</span>
-            <button class="panel-toggle-btn cursor-hover" data-cursor-style="pill" id="panelToggle" aria-label="Minimize panel">−</button>
-        </div>
-        <div class="panel-body" id="panelBody">
-            <div class="control-item">
-                <label for="toggleTrail">ASCII Particle Trail</label>
-                <input type="checkbox" id="toggleTrail" checked class="cursor-hover">
-            </div>
-            <div class="control-item">
-                <label for="toggleMagnet">Magnetic Snapping</label>
-                <input type="checkbox" id="toggleMagnet" checked class="cursor-hover">
-            </div>
-            <div class="control-item">
-                <label for="toggleGaze">Eye Gaze Tracking</label>
-                <input type="checkbox" id="toggleGaze" checked class="cursor-hover">
-            </div>
-            <div class="control-item">
-                <label for="toggleGlitchText">Text Glitch Scramble</label>
-                <input type="checkbox" id="toggleGlitchText" checked class="cursor-hover">
-            </div>
-            <div class="control-item slider-control">
-                <div class="slider-header">
-                    <label for="trailDistance">Trail Wake Distance</label>
-                    <span id="trailDistVal">28px</span>
-                </div>
-                <input type="range" id="trailDistance" min="10" max="80" value="28" class="cursor-hover">
-            </div>
-            <div class="control-item slider-control">
-                <div class="slider-header">
-                    <label for="cursorBlur">Backdrop Blur</label>
-                    <span id="blurVal">6px</span>
-                </div>
-                <input type="range" id="cursorBlur" min="0" max="20" value="6" class="cursor-hover">
-            </div>
-        </div>
-    </aside>
-
     <!-- Footer -->
     <footer class="site-footer">
         <div class="footer-content">
             <div class="footer-brand">
-                <span class="footer-logo">✦ lilguy.lab</span>
-                <span class="footer-copy">Crafted with pure HTML5, CSS3, & Canvas Physics.</span>
+                <img src="/backtrack/logo.png" alt="Backtrack" class="footer-logo-img">
+                <span class="footer-logo">Backtrack</span>
             </div>
             <div class="footer-links" style="display: flex; gap: 1.5rem;">
-                <a href="/backtrack/privacy/" class="cursor-hover">privacy policy</a>
-                <a href="/backtrack/terms/" class="cursor-hover">terms of service</a>
-                <a href="https://docs.ilyambr.com/backtrack" class="cursor-hover" target="_blank" rel="noopener">docs</a>
-                <a href="#hero" class="cursor-hover">back to top ↑</a>
+                <a href="/backtrack/privacy/">privacy policy</a>
+                <a href="/backtrack/terms/">terms of service</a>
+                <a href="https://docs.ilyambr.com/backtrack" target="_blank" rel="noopener">documentation</a>
+                <a href="https://github.com/ilyambr/backtrack" target="_blank" rel="noopener">github</a>
             </div>
         </div>
     </footer>
 
     <!-- Scripts -->
-    <script src="cursor.js"></script>
-    <script src="glitch-trail.js"></script>
-    <script src="creature-canvas.js"></script>
-    <script src="spinner.js"></script>
-    <script src="interactions.js"></script>
+    <script src="/backtrack/cursor.js"></script>
+    <script src="/backtrack/glitch-trail.js"></script>
 </body>
 </html>
