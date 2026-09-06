@@ -95,6 +95,14 @@ export default {
       );
     }
 
+    // Convenience aliases for legal documents
+    if (url.pathname === "/privacy" || url.pathname === "/privacy/") {
+      return Response.redirect(new URL("/backtrack/privacy/", request.url).toString(), 302);
+    }
+    if (url.pathname === "/terms" || url.pathname === "/terms/") {
+      return Response.redirect(new URL("/backtrack/terms/", request.url).toString(), 302);
+    }
+
     // Everything else falls through to the static assets.
     return env.ASSETS.fetch(request);
   },

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms of Service — Backtrack</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="/backtrack/styles.css">
+    <style>
+        .legal-container {
+            max-width: 820px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 2.5rem;
+        }
+
+        .legal-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 2.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+            transition: border-color 0.2s ease;
+        }
+
+        .legal-card:hover {
+            border-color: var(--text-secondary);
+        }
+
+        .legal-card-num {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .legal-card h2 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+        }
+
+        .legal-card p, .legal-card li {
+            font-size: 0.98rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .legal-card ul {
+            padding-left: 1.4rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .legal-card strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .legal-card code {
+            font-family: var(--font-mono);
+            background-color: var(--bg-surface-elevated);
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.85em;
+            color: var(--text-primary);
+            border: 1px solid var(--border-subtle);
+        }
+
+        .legal-card a {
+            color: var(--text-primary);
+            text-decoration: underline;
+            text-underline-offset: 3px;
+            transition: opacity 0.2s ease;
+        }
+
+        .legal-card a:hover {
+            opacity: 0.75;
+        }
+
+        .disclaimer-text {
+            font-size: 0.9rem !important;
+            letter-spacing: 0.02em;
+            line-height: 1.8 !important;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body class="glitch-mouse-trail">
+    <!-- Custom Morphing Magnetic Cursor -->
+    <div class="custom-cursor"></div>
+
+    <!-- Header Navigation -->
+    <header class="site-header">
+        <div class="header-logo">
+            <a href="/backtrack/" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 0.65rem;">
+                <span class="logo-mark cursor-hover" data-cursor-style="circle">✦</span>
+                <span class="logo-text glitch">backtrack // legal</span>
+            </a>
+        </div>
+        <nav class="header-nav">
+            <a href="/backtrack/" class="nav-link cursor-hover">home</a>
+            <a href="https://docs.ilyambr.com/backtrack" class="nav-link cursor-hover" target="_blank" rel="noopener">docs</a>
+            <a href="/backtrack/privacy/" class="nav-link cursor-hover">privacy</a>
+            <a href="https://github.com/ilyambr/backtrack" class="nav-link cursor-hover" target="_blank" rel="noopener">github</a>
+            <button id="themeToggle" class="theme-btn cursor-hover" data-cursor-style="pill" aria-label="Toggle theme">
+                <span class="theme-icon">◐</span>
+            </button>
+        </nav>
+    </header>
+
+    <!-- Main Container -->
+    <main class="main-content">
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-tagline-wrapper">
+                <span class="badge cursor-hover" data-cursor-style="pill">terms of service</span>
+            </div>
+            
+            <h1 class="hero-heading">
+                <span class="line">terms of</span>
+                <span class="line"><span class="highlight-text">service.</span></span>
+            </h1>
+
+            <p class="hero-subtitle">
+                Last updated: September 2026. Please read these Terms of Service carefully before using the Backtrack application and Stream Deck plugin.
+            </p>
+        </section>
+
+        <!-- Document Content -->
+        <div class="legal-container">
+            <!-- Section 1 -->
+            <article class="legal-card">
+                <div class="legal-card-num">01 // OPEN SOURCE LICENSING</div>
+                <h2>Open Source License</h2>
+                <p>
+                    Backtrack is free, open-source software licensed under the <strong>GNU General Public License v3.0 (GPLv3)</strong>. You are free to inspect, modify, and redistribute the source code under the terms of the GPLv3 license as detailed in the LICENSE file in the project repository at <a href="https://github.com/ilyambr/backtrack" target="_blank" rel="noopener">https://github.com/ilyambr/backtrack</a>.
+                </p>
+            </article>
+
+            <!-- Section 2 -->
+            <article class="legal-card">
+                <div class="legal-card-num">02 // ARCHITECTURE</div>
+                <h2>Nature of the Software</h2>
+                <p>
+                    Backtrack is a local companion and instant-replay management tool designed to interact with Open Broadcaster Software (OBS Studio). Backtrack operates locally on your device without centralized servers, mandatory cloud accounts, or telemetry tracking.
+                </p>
+            </article>
+
+            <!-- Section 3 -->
+            <article class="legal-card">
+                <div class="legal-card-num">03 // USER RIGHTS & RESPONSIBILITIES</div>
+                <h2>User Content and Responsibility</h2>
+                <ul>
+                    <li>
+                        <strong>Ownership:</strong> You retain full ownership of all video recordings, replay buffers, audio, bookmarks, and media files captured or processed through Backtrack.
+                    </li>
+                    <li>
+                        <strong>Lawful Use:</strong> You agree to use Backtrack in compliance with all applicable local, state, national, and international laws, including laws governing recording privacy, consent, and copyright.
+                    </li>
+                    <li>
+                        <strong>Content Responsibility:</strong> You are solely responsible for the content you record, compress, merge, share, or upload using Backtrack.
+                    </li>
+                </ul>
+            </article>
+
+            <!-- Section 4 -->
+            <article class="legal-card">
+                <div class="legal-card-num">04 // THIRD-PARTY SERVICES</div>
+                <h2>Third-Party Integrations</h2>
+                <ul>
+                    <li>
+                        <strong>Google Drive (Optional):</strong> Backtrack includes optional integration with the Google Drive API to allow you to upload clips directly to your Google Drive account. By using Google Drive features, you acknowledge and agree that your use is subject to the <a href="https://policies.google.com/terms" target="_blank" rel="noopener">Google Terms of Service</a> and <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google Privacy Policy</a>. Backtrack acts solely as a client-side interface for your own storage and is not responsible for your Google Drive storage limits, file retention policies, or service outages.
+                    </li>
+                    <li>
+                        <strong>OBS Studio:</strong> Backtrack connects to OBS Studio via WebSocket. Backtrack is an independent open-source project and is not affiliated with or endorsed by OBS Studio or the OBS Project.
+                    </li>
+                    <li>
+                        <strong>Elgato Stream Deck:</strong> The Backtrack Stream Deck plugin operates via local loopback WebSocket communication. Backtrack is not affiliated with or endorsed by Corsair or Elgato.
+                    </li>
+                </ul>
+            </article>
+
+            <!-- Section 5 -->
+            <article class="legal-card">
+                <div class="legal-card-num">05 // DISCLAIMERS</div>
+                <h2>Disclaimer of Warranties</h2>
+                <p class="disclaimer-text">
+                    To the maximum extent permitted by applicable law, the software is provided "as is" and "as available", without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose, and noninfringement.
+                </p>
+                <p class="disclaimer-text">
+                    The entire risk as to the quality, performance, and use of the software is with you. We do not warrant that the software will be error-free, uninterrupted, or compatible with all hardware or software configurations.
+                </p>
+            </article>
+
+            <!-- Section 6 -->
+            <article class="legal-card">
+                <div class="legal-card-num">06 // LIABILITY</div>
+                <h2>Limitation of Liability</h2>
+                <p class="disclaimer-text">
+                    In no event shall the authors, contributors, or copyright holders be liable for any claim, damages, or other liability, whether in an action of contract, tort, or otherwise, arising from, out of, or in connection with the software or the use or other dealings in the software, including but not limited to lost recordings, corrupted video files, replay buffer loss, system crashes, or third-party API downtime.
+                </p>
+            </article>
+
+            <!-- Section 7 -->
+            <article class="legal-card">
+                <div class="legal-card-num">07 // POLICY UPDATES</div>
+                <h2>Changes to Terms</h2>
+                <p>
+                    We may update these Terms from time to time to reflect changes in software features, legal requirements, or third-party API policies. Any updates will be published with an updated "Last updated" date in the project repository.
+                </p>
+            </article>
+
+            <!-- Section 8 -->
+            <article class="legal-card">
+                <div class="legal-card-num">08 // CONTACT</div>
+                <h2>Contact & Source Code</h2>
+                <p>
+                    Backtrack is developed by <strong>ilyambr</strong> and community contributors. For bug reports, feature suggestions, or questions regarding these Terms:
+                </p>
+                <ul>
+                    <li>Source Code & Issues: <a href="https://github.com/ilyambr/backtrack" target="_blank" rel="noopener">https://github.com/ilyambr/backtrack</a></li>
+                    <li>Website: <a href="https://ilyambr.com">https://ilyambr.com</a></li>
+                    <li>Documentation: <a href="https://docs.ilyambr.com/backtrack" target="_blank" rel="noopener">https://docs.ilyambr.com/backtrack</a></li>
+                </ul>
+            </article>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <span class="footer-logo">✦ Backtrack</span>
+                <span class="footer-copy">Crafted with pure HTML5, CSS3, & Canvas Physics.</span>
+            </div>
+            <div class="footer-links" style="display: flex; gap: 1.5rem;">
+                <a href="/backtrack/privacy/" class="cursor-hover">privacy policy</a>
+                <a href="https://docs.ilyambr.com/backtrack" class="cursor-hover" target="_blank" rel="noopener">documentation</a>
+                <a href="https://github.com/ilyambr/backtrack" class="cursor-hover" target="_blank" rel="noopener">github</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="/backtrack/cursor.js"></script>
+    <script src="/backtrack/glitch-trail.js"></script>
+    <script>
+        (function() {
+            const themeToggle = document.getElementById('themeToggle');
+            let currentTheme = localStorage.getItem('lilguy_theme') || 'light';
+            function setTheme(theme) {
+                currentTheme = theme;
+                document.documentElement.setAttribute('data-theme', theme);
+                localStorage.setItem('lilguy_theme', theme);
+            }
+            if (currentTheme === 'dark') setTheme('dark');
+            if (themeToggle) {
+                themeToggle.addEventListener('click', () => {
+                    setTheme(currentTheme === 'dark' ? 'light' : 'dark');
+                });
+            }
+        })();
+    </script>
+</body>
+</html>
