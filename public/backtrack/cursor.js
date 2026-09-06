@@ -15,7 +15,7 @@
 
     // Automatically mark all interactive links, buttons, and inputs for magnetic snapping
     function markInteractiveElements() {
-        document.querySelectorAll('a, button, input, select, textarea, [role="button"]').forEach(el => {
+        document.querySelectorAll('a:not(.no-cursor-snap), button:not(.no-cursor-snap), input, select, textarea, [role="button"]:not(.no-cursor-snap)').forEach(el => {
             if (!el.classList.contains('cursor-hover')) {
                 el.classList.add('cursor-hover');
             }
@@ -170,6 +170,10 @@
         let hoveredElement = document.elementFromPoint(e.clientX, e.clientY);
         while (hoveredElement && !hoveredElement.classList.contains('cursor-hover') && hoveredElement.tagName !== 'A' && hoveredElement.tagName !== 'BUTTON') {
             hoveredElement = hoveredElement.parentElement;
+        }
+
+        if (hoveredElement && (hoveredElement.classList.contains('no-cursor-snap') || hoveredElement.closest('.no-cursor-snap'))) {
+            hoveredElement = null;
         }
 
         if (hoveredElement) {
