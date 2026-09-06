@@ -5,29 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>do you like?</title>
 
-  <!-- Google Fonts: Space Grotesk & Space Mono -->
+  <!-- Space Mono for Glitch Particles -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 
   <style>
     :root {
       --bg-primary: #101113;
       --bg-surface: #16181a;
-      --bg-surface-elevated: #181a1e;
-      --border-color: #26292e;
-      --border-subtle: #1c1e22;
-      --border-medium: rgba(255, 255, 255, 0.15);
-
-      --text-primary: #f5f6f8;
-      --text-secondary: #aeb4bd;
-      --text-muted: #767d87;
+      --border-color: #ffffff;
 
       --cursor-bg: rgba(255, 255, 255, 0.16);
       --cursor-border: rgba(255, 255, 255, 0.55);
       --cursor-blur: 6px;
 
-      --font-main: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-serif: "Times New Roman", Times, serif;
       --font-mono: 'Space Mono', monospace;
     }
 
@@ -46,106 +39,120 @@
     html, body {
       height: 100%;
       height: 100dvh;
-      overflow: hidden;
+      overflow-x: hidden;
       background-color: var(--bg-primary);
     }
 
     body {
-      color: var(--text-primary);
-      font-family: var(--font-main);
+      color: #ffffff;
+      font-family: var(--font-serif);
       display: flex;
       flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding: 2vh 3vw;
-      text-align: center;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: clamp(24px, 4.5vh, 50px) clamp(24px, 5vw, 70px);
+      text-align: left;
       position: relative;
       -webkit-font-smoothing: antialiased;
     }
 
+    .main-section {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      width: 100%;
+    }
+
     h1 {
-      font-family: var(--font-main);
+      font-family: var(--font-serif);
       font-size: clamp(36px, 5.5vh, 64px);
-      font-weight: 700;
-      letter-spacing: -0.03em;
-      color: var(--text-primary);
-      margin-bottom: 2vh;
+      font-weight: bold;
+      letter-spacing: normal;
+      color: #ffffff;
+      margin-bottom: 2.5vh;
+      text-align: left;
     }
 
     .container {
       display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: clamp(24px, 4vw, 70px);
-      width: 92vw;
-      max-width: 1400px;
+      justify-content: flex-start;
+      align-items: flex-start;
+      gap: clamp(20px, 3.5vw, 55px);
+      width: auto;
+      max-width: 100%;
     }
 
     .choice {
       display: flex;
       flex-direction: column;
-      align-items: center;
+      align-items: flex-start;
+      text-align: left;
+    }
+
+    .choice-title-link {
       text-decoration: none;
-      color: var(--text-primary);
+      color: #ffffff;
+      display: inline-block;
+      margin-bottom: 1.5vh;
     }
 
     .choice h2 {
-      font-family: var(--font-main);
+      font-family: var(--font-serif);
       font-size: clamp(24px, 4vh, 44px);
-      font-weight: 600;
-      letter-spacing: -0.02em;
-      color: var(--text-secondary);
-      margin-bottom: 1.5vh;
-      transition: color 0.2s ease;
+      font-weight: bold;
+      letter-spacing: normal;
+      color: #ffffff;
+      margin: 0;
+      text-align: left;
+    }
+
+    .choice-img-link {
+      display: block;
+      line-height: 0;
+      text-decoration: none;
     }
 
     .choice img {
-      width: min(42vw, 56vh);
-      height: min(42vw, 56vh);
+      width: min(24vw, 44vh);
+      height: min(24vw, 44vh);
       aspect-ratio: 1 / 1;
       object-fit: cover;
-      border: 1px solid var(--border-color);
+      border: 1px solid #ffffff;
       background-color: var(--bg-surface);
       display: block;
-      transition: border-color 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-                  box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-                  transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: box-shadow 0.25s ease, border-color 0.25s ease;
     }
 
-    .choice:hover h2 {
-      color: #ffffff;
-    }
-
-    .choice:hover img {
-      border-color: rgba(255, 255, 255, 0.35);
-      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.1);
-      transform: translateY(-3px);
-    }
-
-    .choice:active img {
-      transform: translateY(-1px);
+    @media (max-width: 768px) {
+      .choice img {
+        width: min(40vw, 36vh);
+        height: min(40vw, 36vh);
+      }
     }
 
     footer {
       display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-top: 2.5vh;
+      justify-content: flex-start;
+      align-items: flex-start;
+      margin-top: auto;
+      padding-top: 4vh;
+      width: 100%;
+    }
+
+    .footer-logo-link {
+      display: inline-block;
+      line-height: 0;
+      text-decoration: none;
     }
 
     .footer-logo {
       height: clamp(30px, 5.5vh, 55px);
       width: auto;
-      max-width: 80vw;
+      max-width: 60vw;
       object-fit: contain;
       filter: none;
-      opacity: 0.75;
-      transition: opacity 0.2s ease;
-      display: block;
-    }
-
-    .footer-logo:hover {
       opacity: 1;
+      display: block;
     }
 
     /* Custom Cursor */
@@ -199,7 +206,7 @@
       font-family: var(--font-mono);
       font-size: 13px;
       font-weight: 700;
-      color: var(--text-secondary);
+      color: rgba(255, 255, 255, 0.7);
       pointer-events: none;
       transform: translate(-50%, -50%) rotate(var(--rotation, 0deg)) scale(var(--scale, 1));
       opacity: 0;
@@ -223,24 +230,36 @@
 
   <div class="custom-cursor"></div>
 
-  <h1>do you like?</h1>
+  <div class="main-section">
+    <h1>do you like?</h1>
 
-  <div class="container">
-    <!-- Left Side: Dogs -->
-    <a href="/dog" class="choice no-cursor-snap">
-      <h2>Dogs</h2>
-      <img src="dog.jpg" alt="Dog">
-    </a>
+    <div class="container">
+      <!-- Left Side: Dogs -->
+      <div class="choice">
+        <a href="/dog" class="choice-title-link cursor-hover">
+          <h2>Dogs</h2>
+        </a>
+        <a href="/dog" class="choice-img-link cursor-hover">
+          <img src="dog.jpg" alt="Dog" class="cursor-hover">
+        </a>
+      </div>
 
-    <!-- Right Side: Cats -->
-    <a href="/cat" class="choice no-cursor-snap">
-      <h2>Cats</h2>
-      <img src="cat.jpg" alt="Cat">
-    </a>
+      <!-- Right Side: Cats -->
+      <div class="choice">
+        <a href="/cat" class="choice-title-link cursor-hover">
+          <h2>Cats</h2>
+        </a>
+        <a href="/cat" class="choice-img-link cursor-hover">
+          <img src="cat.jpg" alt="Cat" class="cursor-hover">
+        </a>
+      </div>
+    </div>
   </div>
 
   <footer>
-    <img src="ilyambr.png" alt="ilyambr" class="footer-logo">
+    <a href="/" class="footer-logo-link cursor-hover">
+      <img src="ilyambr.png" alt="ilyambr" class="footer-logo cursor-hover">
+    </a>
   </footer>
 
   <script src="/backtrack/cursor.js"></script>
