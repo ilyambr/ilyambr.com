@@ -54,49 +54,43 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
-      align-items: flex-start;
-      padding: 0 clamp(32px, 5vw, 80px);
-      text-align: left;
+      align-items: center;
+      padding: 2vh 3vw;
+      text-align: center;
       position: relative;
       -webkit-font-smoothing: antialiased;
     }
 
-    .main-section {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-    }
-
     h1 {
       font-family: var(--font-serif);
-      font-size: clamp(34px, 5vh, 58px);
+      font-size: clamp(36px, 5.5vh, 64px);
       font-weight: bold;
       letter-spacing: normal;
       color: var(--text-color);
-      margin-bottom: clamp(16px, 2.5vh, 28px);
-      text-align: left;
+      margin-bottom: 2vh;
     }
 
     .container {
       display: flex;
-      justify-content: flex-start;
-      align-items: flex-start;
-      gap: clamp(20px, 3.5vw, 50px);
-      width: auto;
+      justify-content: center;
+      align-items: center;
+      gap: clamp(24px, 4vw, 70px);
+      width: 92vw;
+      max-width: 1400px;
     }
 
     .choice {
       display: flex;
       flex-direction: column;
-      align-items: flex-start;
-      text-align: left;
+      align-items: center;
+      text-align: center;
     }
 
     .choice-title-link {
       text-decoration: none;
       color: var(--text-color);
       display: inline-block;
-      margin-bottom: clamp(10px, 1.5vh, 18px);
+      margin-bottom: 1.5vh;
       transition: color 0.2s ease;
     }
 
@@ -106,12 +100,11 @@
 
     .choice h2 {
       font-family: var(--font-serif);
-      font-size: clamp(22px, 3.5vh, 40px);
+      font-size: clamp(24px, 4vh, 44px);
       font-weight: bold;
       letter-spacing: normal;
       color: var(--text-color);
       margin: 0;
-      text-align: left;
       transition: color 0.2s ease;
     }
 
@@ -122,8 +115,8 @@
     }
 
     .choice img {
-      width: min(30vw, 48vh);
-      height: min(30vw, 48vh);
+      width: min(42vw, 56vh);
+      height: min(42vw, 56vh);
       aspect-ratio: 1 / 1;
       object-fit: cover;
       border: 1px solid var(--border-color);
@@ -137,18 +130,11 @@
       box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6);
     }
 
-    @media (max-width: 768px) {
-      .choice img {
-        width: min(38vw, 34vh);
-        height: min(38vw, 34vh);
-      }
-    }
-
     footer {
       display: flex;
-      justify-content: flex-start;
-      align-items: flex-start;
-      margin-top: clamp(20px, 3.5vh, 40px);
+      justify-content: center;
+      align-items: center;
+      margin-top: 3.5vh;
     }
 
     .footer-logo-link {
@@ -159,11 +145,11 @@
 
     .footer-logo {
       display: block;
-      height: clamp(30px, 4.5vh, 48px);
-      width: clamp(80px, 11vw, 130px);
+      height: clamp(30px, 5vh, 52px);
+      width: clamp(80px, 12vw, 140px);
       background-color: var(--text-color);
-      -webkit-mask: url('/ilyambr.png') no-repeat left center / contain;
-      mask: url('/ilyambr.png') no-repeat left center / contain;
+      -webkit-mask: url('/ilyambr.png') no-repeat center center / contain;
+      mask: url('/ilyambr.png') no-repeat center center / contain;
       transition: background-color 0.2s ease;
     }
 
@@ -246,37 +232,35 @@
 
   <div class="custom-cursor"></div>
 
-  <div class="main-section">
-    <h1>do you like?</h1>
+  <h1>do you like?</h1>
 
-    <div class="container">
-      <!-- Left Side: Dogs -->
-      <div class="choice">
-        <a href="/dog" class="choice-title-link cursor-hover">
-          <h2>Dogs</h2>
-        </a>
-        <a href="/dog" class="choice-img-link cursor-hover">
-          <img src="dog.jpg" alt="Dog" class="cursor-hover">
-        </a>
-      </div>
-
-      <!-- Right Side: Cats -->
-      <div class="choice">
-        <a href="/cat" class="choice-title-link cursor-hover">
-          <h2>Cats</h2>
-        </a>
-        <a href="/cat" class="choice-img-link cursor-hover">
-          <img src="cat.jpg" alt="Cat" class="cursor-hover">
-        </a>
-      </div>
+  <div class="container">
+    <!-- Left Side: Dogs -->
+    <div class="choice">
+      <a href="/dog" class="choice-title-link cursor-hover">
+        <h2>Dogs</h2>
+      </a>
+      <a href="/dog" class="choice-img-link cursor-hover">
+        <img src="dog.jpg" alt="Dog" class="cursor-hover">
+      </a>
     </div>
 
-    <footer>
-      <a href="/" class="footer-logo-link cursor-hover" aria-label="ilyambr">
-        <div class="footer-logo cursor-hover"></div>
+    <!-- Right Side: Cats -->
+    <div class="choice">
+      <a href="/cat" class="choice-title-link cursor-hover">
+        <h2>Cats</h2>
       </a>
-    </footer>
+      <a href="/cat" class="choice-img-link cursor-hover">
+        <img src="cat.jpg" alt="Cat" class="cursor-hover">
+      </a>
+    </div>
   </div>
+
+  <footer>
+    <a href="/" class="footer-logo-link cursor-hover" aria-label="ilyambr">
+      <div class="footer-logo cursor-hover"></div>
+    </a>
+  </footer>
 
   <script src="/backtrack/cursor.js"></script>
   <script src="/backtrack/glitch-trail.js"></script>
