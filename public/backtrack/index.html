@@ -11,6 +11,49 @@
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="/backtrack/styles.css">
+    <style>
+        .features-editorial {
+            display: flex;
+            flex-direction: column;
+            gap: 3.5rem;
+            max-width: 820px;
+        }
+
+        .feature-block {
+            display: flex;
+            flex-direction: column;
+            gap: 0.85rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .feature-block:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .feature-num {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+        }
+
+        .feature-text {
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+    </style>
 </head>
 <body class="glitch-mouse-trail">
     <!-- Custom Morphing Magnetic Cursor -->
@@ -20,8 +63,7 @@
     <header class="site-header">
         <div class="header-logo">
             <a href="/backtrack/" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 0.75rem;">
-                <img src="/backtrack/logo.png" alt="Backtrack Logo" class="logo-img">
-                <span class="logo-text glitch">backtrack</span>
+                <img src="/backtrack/backtrack-text-logo.png" alt="Backtrack" class="backtrack-text-logo">
             </a>
         </div>
         <nav class="header-nav">
@@ -36,10 +78,6 @@
     <main class="main-content">
         <!-- Hero Section -->
         <section class="hero-section">
-            <div class="hero-tagline-wrapper">
-                <span class="badge">instant replay hud</span>
-            </div>
-            
             <h1 class="hero-heading">
                 <span class="line">capture without</span>
                 <span class="line"><span class="highlight-text">alt-tabbing.</span></span>
@@ -59,37 +97,37 @@
             </div>
         </section>
 
-        <!-- Technical Anatomy / Features Grid -->
-        <section class="anatomy-section">
+        <!-- Features / Paragraph Style Layout -->
+        <section class="features-section">
             <div class="section-header">
                 <span class="section-label">FEATURES // ARCHITECTURE</span>
                 <h2 class="section-title">Built For Streamers & Gamers</h2>
             </div>
 
-            <div class="anatomy-grid">
-                <div class="anatomy-card">
-                    <div class="anatomy-num">01</div>
-                    <h3 class="anatomy-title">Hotkey-Summoned HUD</h3>
-                    <p class="anatomy-text">Instantly overlay your clips, gallery, and playback controls over fullscreen games with a single customizable shortcut.</p>
-                </div>
+            <div class="features-editorial">
+                <article class="feature-block">
+                    <span class="feature-num">01 // OVERLAY HUD</span>
+                    <h3 class="feature-title">Hotkey-Summoned In-Game HUD</h3>
+                    <p class="feature-text">Instantly overlay your clips, gallery, and playback controls over fullscreen games with a single customizable shortcut. Never lose your crosshair or pause mid-match.</p>
+                </article>
 
-                <div class="anatomy-card">
-                    <div class="anatomy-num">02</div>
-                    <h3 class="anatomy-title">Zero-Lag obs-websocket</h3>
-                    <p class="anatomy-text">Communicates entirely over native obs-websocket. Never touches your scene collection or settings directly.</p>
-                </div>
+                <article class="feature-block">
+                    <span class="feature-num">02 // ZERO OVERHEAD</span>
+                    <h3 class="feature-title">Native obs-websocket Architecture</h3>
+                    <p class="feature-text">Communicates entirely over native obs-websocket. Never touches your OBS scene collections, encoders, or settings directly—it works on top of whatever setup you already have.</p>
+                </article>
 
-                <div class="anatomy-card">
-                    <div class="anatomy-num">03</div>
-                    <h3 class="anatomy-title">Peer-to-Peer Remote Sync</h3>
-                    <p class="anatomy-text">Pair dual-PC streaming setups over LAN or Tailscale. Stream video and trigger clip saves with zero cloud relays.</p>
-                </div>
+                <article class="feature-block">
+                    <span class="feature-num">03 // DUAL-PC SUPPORT</span>
+                    <h3 class="feature-title">Peer-to-Peer Remote Sync & Streaming</h3>
+                    <p class="feature-text">Pair dual-PC streaming rigs seamlessly over local area networks or private Tailscale mesh. Stream video preview frames and trigger remote recording buffers without any cloud servers.</p>
+                </article>
 
-                <div class="anatomy-card">
-                    <div class="anatomy-num">04</div>
-                    <h3 class="anatomy-title">Stream Deck Plugin</h3>
-                    <p class="anatomy-text">Native two-way WebSocket IPC integration with live recording timers, clip indicators, and chapter star bookmarks.</p>
-                </div>
+                <article class="feature-block">
+                    <span class="feature-num">04 // STREAM DECK HARDWARE</span>
+                    <h3 class="feature-title">Two-Way Stream Deck Plugin</h3>
+                    <p class="feature-text">Hardware integration with real-time recording stopwatch timers, live replay buffer indicators, and one-tap chapter star bookmark drops directly into your clips.</p>
+                </article>
             </div>
         </section>
     </main>
@@ -98,8 +136,7 @@
     <footer class="site-footer">
         <div class="footer-content">
             <div class="footer-brand">
-                <img src="/backtrack/logo.png" alt="Backtrack" class="footer-logo-img">
-                <span class="footer-logo">Backtrack</span>
+                <img src="/backtrack/backtrack-text-logo.png" alt="Backtrack" class="backtrack-text-logo" style="height: 20px;">
             </div>
             <div class="footer-links" style="display: flex; gap: 1.5rem;">
                 <a href="/backtrack/privacy/">privacy policy</a>

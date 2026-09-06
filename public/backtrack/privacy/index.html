@@ -13,85 +13,86 @@
     <link rel="stylesheet" href="/backtrack/styles.css">
     <style>
         .legal-container {
-            max-width: 860px;
+            max-width: 820px;
             margin: 0 auto;
             display: flex;
             flex-direction: column;
-            gap: 2rem;
+            gap: 3.5rem;
         }
 
-        .legal-card {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-color);
-            padding: 2.25rem;
+        .legal-section {
             display: flex;
             flex-direction: column;
             gap: 1.25rem;
-            transition: border-color 0.2s ease;
+            padding-bottom: 2.5rem;
+            border-bottom: 1px solid var(--border-color);
         }
 
-        .legal-card:hover {
-            border-color: var(--border-medium);
+        .legal-section:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
         }
 
-        .legal-card-num {
+        .legal-section-num {
             font-family: var(--font-mono);
             font-size: 0.8rem;
             font-weight: 700;
             color: var(--text-muted);
-            letter-spacing: 0.05em;
+            letter-spacing: 0.06em;
             text-transform: uppercase;
         }
 
-        .legal-card h2 {
-            font-size: 1.35rem;
-            font-weight: 600;
+        .legal-section h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
             letter-spacing: -0.02em;
             color: var(--text-primary);
         }
 
-        .legal-card p, .legal-card li {
-            font-size: 0.98rem;
+        .legal-section p, .legal-section li {
+            font-size: 1.05rem;
             color: var(--text-secondary);
-            line-height: 1.7;
+            line-height: 1.8;
         }
 
-        .legal-card ul {
-            padding-left: 1.4rem;
+        .legal-section ul {
+            padding-left: 1.5rem;
             display: flex;
             flex-direction: column;
-            gap: 0.75rem;
+            gap: 1rem;
         }
 
-        .legal-card strong {
+        .legal-section strong {
             color: var(--text-primary);
             font-weight: 600;
         }
 
-        .legal-card code {
+        .legal-section code {
             font-family: var(--font-mono);
             background-color: var(--bg-surface-elevated);
-            padding: 0.15rem 0.4rem;
-            font-size: 0.85em;
+            padding: 0.15rem 0.45rem;
+            font-size: 0.88em;
             color: var(--text-primary);
             border: 1px solid var(--border-subtle);
         }
 
-        .legal-card a {
+        .legal-section a {
             color: var(--accent-blue);
             text-decoration: none;
             transition: text-decoration 0.2s ease;
         }
 
-        .legal-card a:hover {
+        .legal-section a:hover {
             text-decoration: underline;
         }
 
         .highlight-banner {
             border-left: 3px solid var(--accent-blue);
-            padding-left: 1rem;
-            margin: 0.5rem 0;
+            padding-left: 1.25rem;
+            margin: 0.75rem 0;
             color: var(--text-primary);
+            font-size: 1.05rem;
+            line-height: 1.7;
         }
     </style>
 </head>
@@ -103,8 +104,7 @@
     <header class="site-header">
         <div class="header-logo">
             <a href="/backtrack/" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 0.75rem;">
-                <img src="/backtrack/logo.png" alt="Backtrack Logo" class="logo-img">
-                <span class="logo-text glitch">backtrack // privacy</span>
+                <img src="/backtrack/backtrack-text-logo.png" alt="Backtrack" class="backtrack-text-logo">
             </a>
         </div>
         <nav class="header-nav">
@@ -119,10 +119,6 @@
     <main class="main-content">
         <!-- Hero Section -->
         <section class="hero-section">
-            <div class="hero-tagline-wrapper">
-                <span class="badge">privacy policy</span>
-            </div>
-            
             <h1 class="hero-heading">
                 <span class="line">privacy</span>
                 <span class="line"><span class="highlight-text">policy.</span></span>
@@ -133,20 +129,20 @@
             </p>
         </section>
 
-        <!-- Document Content -->
+        <!-- Document Content (Clean Paragraph Editorial Style) -->
         <div class="legal-container">
             <!-- Section 1 -->
-            <article class="legal-card">
-                <div class="legal-card-num">01 // TELEMETRY & DATA COLLECTION</div>
+            <section class="legal-section">
+                <span class="legal-section-num">01 // TELEMETRY & DATA COLLECTION</span>
                 <h2>No Data Collection or Telemetry</h2>
                 <p>
                     Backtrack does not collect, log, track, or transmit any personal information, telemetry, usage statistics, crash metrics, or analytics to any third-party or external servers.
                 </p>
-            </article>
+            </section>
 
             <!-- Section 2 -->
-            <article class="legal-card">
-                <div class="legal-card-num">02 // ARCHITECTURE & NETWORK COMMUNICATION</div>
+            <section class="legal-section">
+                <span class="legal-section-num">02 // ARCHITECTURE & NETWORK COMMUNICATION</span>
                 <h2>Network Communication & Remote Features</h2>
                 <p>
                     Backtrack operates without central cloud infrastructure. Network activity is limited strictly to user-configured connections:
@@ -162,20 +158,20 @@
                         <strong>Peer-to-Peer Clip Sharing:</strong> If you enable <em>"Share my clips with another PC"</em>, Backtrack establishes direct, authenticated point-to-point connections between your paired devices on your local network or private VPN. Video streaming, transcoding, and clip transfers travel directly between your two machines without passing through any external cloud relays or servers.
                     </li>
                 </ul>
-            </article>
+            </section>
 
             <!-- Section 3 -->
-            <article class="legal-card">
-                <div class="legal-card-num">03 // LOCAL STORAGE</div>
+            <section class="legal-section">
+                <span class="legal-section-num">03 // LOCAL STORAGE</span>
                 <h2>Media Storage & Ownership</h2>
                 <p>
                     All screen recordings, replay buffers, audio files, bookmarks, metadata, and video clips remain entirely on your local storage devices (or transfer exclusively to your designated paired machines). Nothing is ever uploaded to cloud servers without your explicit action.
                 </p>
-            </article>
+            </section>
 
             <!-- Section 4 -->
-            <article class="legal-card">
-                <div class="legal-card-num">04 // OPTIONAL INTEGRATIONS</div>
+            <section class="legal-section">
+                <span class="legal-section-num">04 // OPTIONAL INTEGRATIONS</span>
                 <h2>Google Drive Integration (Optional)</h2>
                 <p>
                     Backtrack includes an optional feature allowing you to upload clips directly to your personal Google Drive account.
@@ -203,16 +199,16 @@
                         </div>
                     </li>
                 </ul>
-            </article>
+            </section>
 
             <!-- Section 5 -->
-            <article class="legal-card">
-                <div class="legal-card-num">05 // OPEN SOURCE AUDITABILITY</div>
+            <section class="legal-section">
+                <span class="legal-section-num">05 // OPEN SOURCE AUDITABILITY</span>
                 <h2>Open Source</h2>
                 <p>
                     Backtrack is fully open source. You can independently review the entire source code, network implementations, and RPC protocols on GitHub at <a href="https://github.com/ilyambr/backtrack" target="_blank" rel="noopener">https://github.com/ilyambr/backtrack</a>.
                 </p>
-            </article>
+            </section>
         </div>
     </main>
 
@@ -220,8 +216,7 @@
     <footer class="site-footer">
         <div class="footer-content">
             <div class="footer-brand">
-                <img src="/backtrack/logo.png" alt="Backtrack" class="footer-logo-img">
-                <span class="footer-logo">Backtrack</span>
+                <img src="/backtrack/backtrack-text-logo.png" alt="Backtrack" class="backtrack-text-logo" style="height: 20px;">
             </div>
             <div class="footer-links" style="display: flex; gap: 1.5rem;">
                 <a href="/backtrack/terms/">terms of service</a>

@@ -52,9 +52,9 @@
 }
 
 /* ==========================================================================
-   Global Reset & Cursor Hide
+   Global Reset & Cursor Hide (Square UI, circular cursor)
    ========================================================================== */
-*, *::before, *::after {
+*:not(.custom-cursor), *:not(.custom-cursor)::before, *:not(.custom-cursor)::after {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -99,19 +99,19 @@ body {
 ::-webkit-scrollbar-corner { background: transparent; }
 
 /* ==========================================================================
-   Custom Morphing Magnetic Cursor (Square aesthetic)
+   Custom Morphing Magnetic Cursor (Circular resting state)
    ========================================================================== */
 .custom-cursor {
-    width: 32px;
-    height: 32px;
-    border-radius: 0px !important;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
     position: fixed;
     pointer-events: none;
     z-index: 99999;
     background-color: var(--cursor-bg);
     -webkit-backdrop-filter: blur(var(--cursor-blur));
     backdrop-filter: blur(var(--cursor-blur));
-    transform: translate(-16px, -16px);
+    transform: translate(-18px, -18px);
     transition: opacity 0.15s ease, 
                 backdrop-filter 0.3s cubic-bezier(0.16, 1, 0.3, 1), 
                 -webkit-backdrop-filter 0.3s cubic-bezier(0.16, 1, 0.3, 1), 
@@ -209,6 +209,13 @@ body {
 
 .logo-img {
     height: 26px;
+    width: auto;
+    display: block;
+    object-fit: contain;
+}
+
+.backtrack-text-logo {
+    height: 24px;
     width: auto;
     display: block;
     object-fit: contain;

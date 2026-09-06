@@ -1,6 +1,6 @@
 /**
  * Magnetic & Morphing Frosted Glass Cursor Engine
- * Replicating handcrafted cursor dynamics with Backtrack square theme & link snapping
+ * Restored circular resting state with magnetic link snapping
  */
 
 (function () {
@@ -19,9 +19,6 @@
             if (!el.classList.contains('cursor-hover')) {
                 el.classList.add('cursor-hover');
             }
-            if (!el.dataset.cursorStyle) {
-                el.dataset.cursorStyle = 'square';
-            }
         });
     }
 
@@ -36,26 +33,26 @@
     let hovering = false;
     let magneticEnabled = true;
 
-    // Start Coordinates & Dimensions (default square box: 32x32, borderRadius 0)
-    let startTransformX = -16.0;
-    let startTransformY = -16.0;
-    let startWidth = 32.0;
-    let startHeight = 32.0;
-    let startBorderRadius = 0.0;
+    // Start Coordinates & Dimensions (default circle: 36x36, borderRadius 18)
+    let startTransformX = -18.0;
+    let startTransformY = -18.0;
+    let startWidth = 36.0;
+    let startHeight = 36.0;
+    let startBorderRadius = 18.0;
 
     // Current Interpolated Values
-    let currentTransformX = -16.0;
-    let currentTransformY = -16.0;
-    let currentWidth = 32.0;
-    let currentHeight = 32.0;
-    let currentBorderRadius = 0.0;
+    let currentTransformX = -18.0;
+    let currentTransformY = -18.0;
+    let currentWidth = 36.0;
+    let currentHeight = 36.0;
+    let currentBorderRadius = 18.0;
 
     // Target Values
-    let targetTransformX = -16.0;
-    let targetTransformY = -16.0;
-    let targetWidth = 32.0;
-    let targetHeight = 32.0;
-    let targetBorderRadius = 0.0;
+    let targetTransformX = -18.0;
+    let targetTransformY = -18.0;
+    let targetWidth = 36.0;
+    let targetHeight = 36.0;
+    let targetBorderRadius = 18.0;
 
     // Magnetic Physical Tug on the Hovered Element
     let elementStartTransformX = 0.0;
@@ -112,12 +109,12 @@
         currentTransformY = startTransformY + (targetTransformY - startTransformY) * hpEase;
         currentWidth = startWidth + (targetWidth - startWidth) * hpEase;
         currentHeight = startHeight + (targetHeight - startHeight) * hpEase;
-        currentBorderRadius = 0; // Strict zero rounded corners
+        currentBorderRadius = startBorderRadius + (targetBorderRadius - startBorderRadius) * hpEase;
 
         cursor.style.transform = `translate(${currentTransformX}px, ${currentTransformY}px)`;
         cursor.style.width = `${currentWidth}px`;
         cursor.style.height = `${currentHeight}px`;
-        cursor.style.borderRadius = `0px`;
+        cursor.style.borderRadius = `${currentBorderRadius}px`;
 
         elementCurrentTransformX = elementStartTransformX + (elementTargetTransformX - elementStartTransformX) * hpEase;
         elementCurrentTransformY = elementStartTransformY + (elementTargetTransformY - elementStartTransformY) * hpEase;
@@ -157,11 +154,11 @@
         cursor.style.top = `${e.clientY}px`;
 
         if (!magneticEnabled) {
-            targetTransformX = -16;
-            targetTransformY = -16;
-            targetWidth = 32;
-            targetHeight = 32;
-            targetBorderRadius = 0;
+            targetTransformX = -18;
+            targetTransformY = -18;
+            targetWidth = 36;
+            targetHeight = 36;
+            targetBorderRadius = 18;
             elementTargetTransformX = 0;
             elementTargetTransformY = 0;
             cursor.classList.remove('cursor-morph');
@@ -185,7 +182,7 @@
                 startTransformY = currentTransformY;
                 startWidth = currentWidth;
                 startHeight = currentHeight;
-                startBorderRadius = 0;
+                startBorderRadius = currentBorderRadius;
                 elementStartTransformX = elementCurrentTransformX;
                 elementStartTransformY = elementCurrentTransformY;
             }
@@ -218,7 +215,7 @@
             targetTransformY = ((outsetRect.top - e.clientY) * cursorFactor) + (-0.5 * outsetRect.height * centerFactor);
             targetWidth = outsetRect.width;
             targetHeight = outsetRect.height;
-            targetBorderRadius = 0; // Square corners
+            targetBorderRadius = 0; // When hovering over UI elements, snap into sharp box
 
             const elementCenterX = outsetRect.left + outsetRect.width / 2;
             const elementCenterY = outsetRect.top + outsetRect.height / 2;
@@ -237,16 +234,17 @@
                 startTransformY = currentTransformY;
                 startWidth = currentWidth;
                 startHeight = currentHeight;
-                startBorderRadius = 0;
+                startBorderRadius = currentBorderRadius;
                 elementStartTransformX = elementCurrentTransformX;
                 elementStartTransformY = elementCurrentTransformY;
             }
 
-            targetTransformX = -16;
-            targetTransformY = -16;
-            targetWidth = 32;
-            targetHeight = 32;
-            targetBorderRadius = 0;
+            // Return to circle resting state
+            targetTransformX = -18;
+            targetTransformY = -18;
+            targetWidth = 36;
+            targetHeight = 36;
+            targetBorderRadius = 18;
             elementTargetTransformX = 0.0;
             elementTargetTransformY = 0.0;
 
