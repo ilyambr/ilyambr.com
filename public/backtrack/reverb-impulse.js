@@ -1,8 +1,8 @@
 /**
  * Impulse Response Generator for Audio Reverb
- * Synthesizes a realistic decaying stereo impulse response for Web Audio ConvolverNode
+ * Synthesizes a warm, spacious stereo impulse response for Web Audio ConvolverNode
  */
-function createReverbImpulseResponse(audioCtx, duration = 3.2, decay = 3.5) {
+function createReverbImpulseResponse(audioCtx, duration = 1.8, decay = 2.4) {
     const sampleRate = audioCtx.sampleRate;
     const length = Math.floor(sampleRate * duration);
     const impulse = audioCtx.createBuffer(2, length, sampleRate);
@@ -10,7 +10,7 @@ function createReverbImpulseResponse(audioCtx, duration = 3.2, decay = 3.5) {
     const right = impulse.getChannelData(1);
 
     for (let i = 0; i < length; i++) {
-        // Exponential decay envelope
+        // Smooth exponential decay envelope
         const n = i / length;
         const envelope = Math.exp(-n * decay);
         

@@ -1,8 +1,8 @@
 /**
  * Backtrack Ambient Audio Engine & Controls
  * Plays "For Fun.mp3" across /backtrack/ and its subsidiaries (/privacy, /terms, /thanks).
- * Applies far-away, reverbed room acoustics on subpages, clear and direct on /backtrack/ landing.
- * Includes sleek retro/monospace mute and volume controls in the header.
+ * Applies pleasant room reverb on subpages, clear and direct on /backtrack/ landing.
+ * Includes sleek retro/monospace mute and volume controls in the footer.
  */
 (function () {
     'use strict';
@@ -29,11 +29,14 @@
     let masterGain = null;
     let initialized = false;
 
-    // Retrieve saved user preferences
-    let isMuted = localStorage.getItem(STORAGE_KEY_MUTED) === 'true';
-    let savedVolume = parseFloat(localStorage.getItem(STORAGE_KEY_VOLUME));
+    // Retrieve saved user preferences - default NOT muted, default quiet comfortable volume (22%)
+    const storedMuted = localStorage.getItem(STORAGE_KEY_MUTED);
+    let isMuted = storedMuted === 'true'; // false if never set
+
+    const storedVol = localStorage.getItem(STORAGE_KEY_VOLUME);
+    let savedVolume = storedVol !== null ? parseFloat(storedVol) : 0.22;
     if (isNaN(savedVolume)) {
-        savedVolume = 0.5; // default 50%
+        savedVolume = 0.22;
     }
 
     // Audio Element Setup
@@ -49,13 +52,28 @@
         // Restore playback position seamlessly across page navigation
         const savedTime = parseFloat(localStorage.getItem(STORAGE_KEY_TIME));
         const savedTimestamp = parseFloat(localStorage.getItem(STORAGE_KEY_TIMESTAMP));
-        if (!isNaN(savedTime) && !isNaN(savedTimestamp)) {
-            const elapsed = (Date.now() - savedTimestamp) / 1000;
-            // If less than 15 seconds since last page unload, pick up where it left off plus elapsed
-            if (elapsed > 0 && elapsed < 15) {
-                audioElement.currentTime = savedTime + elapsed;
-            } else if (!isNaN(savedTime)) {
-                audioElement.currentTime = savedTime;
+        if (!isNaN(savedTime)) {
+            let targetTime = savedTime;
+            if (!isNaN(savedTimestamp)) {
+                const elapsed = (Date.now() - savedTimestamp) / 1000;
+                if (elapsed > 0 && elapsed < 30) {
+                    targetTime += elapsed;
+                }
+            }
+
+            // Seek as soon as metadata is ready or immediately
+            if (audioElement.readyState >= 1) {
+                if (audioElement.duration && targetTime > audioElement.duration) {
+                    targetTime = targetTime % audioElement.duration;
+                }
+                audioElement.currentTime = targetTime;
+            } else {
+                audioElement.addEventListener('loadedmetadata', () => {
+                    if (audioElement.duration && targetTime > audioElement.duration) {
+                        targetTime = targetTime % audioElement.duration;
+                    }
+                    audioElement.currentTime = targetTime;
+                }, { once: true });
             }
         }
 
@@ -65,9 +83,16 @@
                 localStorage.setItem(STORAGE_KEY_TIME, audioElement.currentTime.toString());
                 localStorage.setItem(STORAGE_KEY_TIMESTAMP, Date.now().toString());
             }
-        }, 1000);
+        }, 800);
 
         window.addEventListener('beforeunload', () => {
+            if (audioElement) {
+                localStorage.setItem(STORAGE_KEY_TIME, audioElement.currentTime.toString());
+                localStorage.setItem(STORAGE_KEY_TIMESTAMP, Date.now().toString());
+            }
+        });
+
+        window.addEventListener('pagehide', () => {
             if (audioElement) {
                 localStorage.setItem(STORAGE_KEY_TIME, audioElement.currentTime.toString());
                 localStorage.setItem(STORAGE_KEY_TIMESTAMP, Date.now().toString());
@@ -96,14 +121,14 @@
         // Dry Path
         dryGain = audioCtx.createGain();
 
-        // Wet (Reverb + Distant Lowpass) Path
+        // Wet (Reverb + Gentle Lowpass) Path
         wetGain = audioCtx.createGain();
         lowpassNode = audioCtx.createBiquadFilter();
         lowpassNode.type = 'lowpass';
 
         convolverNode = audioCtx.createConvolver();
         if (window.createReverbImpulseResponse) {
-            convolverNode.buffer = window.createReverbImpulseResponse(audioCtx, 3.5, 3.0);
+            convolverNode.buffer = window.createReverbImpulseResponse(audioCtx, 1.8, 2.4);
         }
 
         /*
@@ -131,16 +156,18 @@
 
         const now = audioCtx.currentTime;
         if (distantReverbed) {
-            // Far away, in-the-other-room reverb effect
-            // Dry signal drastically lowered and low-passed
+            // Pleasant room reverb effect: not excessively far or buried, warm and atmospheric
+            // 45% dry clarity kept so vocals and melody are clearly heard
             dryGain.gain.setValueAtTime(dryGain.gain.value, now);
-            dryGain.gain.linearRampToValueAtTime(0.08, now + 0.1);
+            dryGain.gain.linearRampToValueAtTime(0.45, now + 0.1);
 
+            // Gentle lowpass roll-off at 4200 Hz (warm rather than completely muffled)
             lowpassNode.frequency.setValueAtTime(lowpassNode.frequency.value, now);
-            lowpassNode.frequency.exponentialRampToValueAtTime(1400, now + 0.1); // Muffled distant highs
+            lowpassNode.frequency.exponentialRampToValueAtTime(4200, now + 0.1);
 
+            // 55% wet reverb tail
             wetGain.gain.setValueAtTime(wetGain.gain.value, now);
-            wetGain.gain.linearRampToValueAtTime(0.92, now + 0.1); // Rich spacious reverb
+            wetGain.gain.linearRampToValueAtTime(0.55, now + 0.1);
         } else {
             // Main /backtrack landing: crisp, full spectrum, upfront
             dryGain.gain.setValueAtTime(dryGain.gain.value, now);
@@ -168,7 +195,9 @@
         setupWebAudio();
 
         if (audioCtx && audioCtx.state === 'suspended') {
-            await audioCtx.resume();
+            try {
+                await audioCtx.resume();
+            } catch (_) {}
         }
 
         try {
@@ -176,10 +205,12 @@
             localStorage.setItem(STORAGE_KEY_PLAYING, 'true');
             updateUI();
         } catch (e) {
-            // Autoplay blocked: wait for first user gesture
+            // Browser autoplay policy blocked unprompted playback: resume on first user interaction anywhere
             const resumeOnGesture = async () => {
                 if (audioCtx && audioCtx.state === 'suspended') {
-                    await audioCtx.resume();
+                    try {
+                        await audioCtx.resume();
+                    } catch (_) {}
                 }
                 if (audioElement && audioElement.paused) {
                     try {
@@ -190,9 +221,11 @@
                 }
                 window.removeEventListener('click', resumeOnGesture);
                 window.removeEventListener('keydown', resumeOnGesture);
+                window.removeEventListener('scroll', resumeOnGesture);
             };
             window.addEventListener('click', resumeOnGesture, { once: true });
             window.addEventListener('keydown', resumeOnGesture, { once: true });
+            window.addEventListener('scroll', resumeOnGesture, { once: true });
         }
     }
 
@@ -202,7 +235,6 @@
         applyVolume();
         updateUI();
 
-        // If audio was never started (e.g. initial page load waiting for click)
         if (audioElement && audioElement.paused && !isMuted) {
             startAudio();
         }
@@ -226,10 +258,10 @@
         }
     }
 
-    // Construct Header UI Widget
+    // Construct Footer UI Widget
     function injectAudioControls() {
-        const headerNav = document.querySelector('.header-nav');
-        if (!headerNav) return;
+        const footerContent = document.querySelector('.footer-content');
+        if (!footerContent) return;
 
         // Check if already injected
         if (document.getElementById('backtrack-audio-widget')) return;
@@ -246,7 +278,7 @@
                 <span class="audio-track-label">for fun</span>
             </div>
             <div class="audio-controls-group">
-                <button type="button" class="audio-mute-btn no-cursor-snap" aria-label="Mute / Unmute" title="Mute / Unmute Audio">
+                <button type="button" class="audio-mute-btn cursor-hover" aria-label="Mute / Unmute" title="Mute / Unmute Audio">
                     <svg class="audio-icon-unmuted" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
                         <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
@@ -258,12 +290,18 @@
                     </svg>
                 </button>
                 <div class="audio-slider-container">
-                    <input type="range" class="audio-volume-slider no-cursor-snap" min="0" max="1" step="0.01" value="${savedVolume}" aria-label="Volume Slider" title="Volume">
+                    <input type="range" class="audio-volume-slider cursor-hover" min="0" max="1" step="0.01" value="${savedVolume}" aria-label="Volume Slider" title="Volume">
                 </div>
             </div>
         `;
 
-        headerNav.appendChild(widget);
+        // Insert between footer brand/logo and footer links, or append nicely
+        const footerLinks = footerContent.querySelector('.footer-links');
+        if (footerLinks) {
+            footerContent.insertBefore(widget, footerLinks);
+        } else {
+            footerContent.appendChild(widget);
+        }
 
         const muteBtn = widget.querySelector('.audio-mute-btn');
         const slider = widget.querySelector('.audio-volume-slider');
@@ -276,6 +314,11 @@
         slider.addEventListener('input', (e) => {
             setVolume(e.target.value);
         });
+
+        // Trigger cursor engine to register interactive elements for magnetic snap
+        if (window.cursorEngine && typeof window.cursorEngine.refreshTargets === 'function') {
+            window.cursorEngine.refreshTargets();
+        }
 
         updateUI();
     }
@@ -298,7 +341,6 @@
         const slider = widget.querySelector('.audio-volume-slider');
         if (slider) {
             slider.value = isMuted ? 0 : savedVolume;
-            // Update custom fill percentage
             const pct = (slider.value * 100).toFixed(0);
             slider.style.setProperty('--slider-fill', `${pct}%`);
         }
@@ -315,8 +357,6 @@
         initialized = true;
 
         injectAudioControls();
-
-        // Attempt autoplay or listen for first interaction
         startAudio();
     }
 

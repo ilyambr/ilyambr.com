@@ -199,17 +199,51 @@
                 elementStartTransformY = 0;
             }
 
-            const rect = hoveredElement.getBoundingClientRect();
-            
-            // Outset padding around hovered element
-            const outsetX = 6;
-            const outsetY = 4;
-            const outsetRect = {
-                left: rect.left - outsetX,
-                top: rect.top - outsetY,
-                width: rect.width + outsetX * 2,
-                height: rect.height + outsetY * 2
-            };
+            let rect = hoveredElement.getBoundingClientRect();
+            let isSliderThumb = false;
+            let thumbCenterX = 0;
+            let thumbCenterY = 0;
+
+            // Specialized snapping for range slider thumb dot
+            if (hoveredElement.tagName === 'INPUT' && hoveredElement.type === 'range') {
+                const min = parseFloat(hoveredElement.min) || 0;
+                const max = parseFloat(hoveredElement.max) || 1;
+                const val = parseFloat(hoveredElement.value) || 0;
+                const ratio = Math.max(0, Math.min(1, (val - min) / (max - min)));
+                const thumbWidth = 10; // width of thumb dot
+                thumbCenterX = rect.left + (thumbWidth / 2) + ratio * (rect.width - thumbWidth);
+                thumbCenterY = rect.top + rect.height / 2;
+
+                // Check distance from cursor to thumb center
+                const distToThumb = Math.hypot(e.clientX - thumbCenterX, e.clientY - thumbCenterY);
+                if (distToThumb < 18) {
+                    isSliderThumb = true;
+                    hoveredElement.classList.add('slider-thumb-hovered');
+                } else {
+                    hoveredElement.classList.remove('slider-thumb-hovered');
+                }
+            }
+
+            // Outset padding around hovered element or thumb dot
+            let outsetRect;
+            if (isSliderThumb) {
+                const thumbSize = 12;
+                outsetRect = {
+                    left: thumbCenterX - thumbSize / 2,
+                    top: thumbCenterY - thumbSize / 2,
+                    width: thumbSize,
+                    height: thumbSize
+                };
+            } else {
+                const outsetX = 6;
+                const outsetY = 4;
+                outsetRect = {
+                    left: rect.left - outsetX,
+                    top: rect.top - outsetY,
+                    width: rect.width + outsetX * 2,
+                    height: rect.height + outsetY * 2
+                };
+            }
 
             const cursorFactor = 0.94;
             const centerFactor = 0.06;
@@ -219,7 +253,7 @@
             targetTransformY = ((outsetRect.top - e.clientY) * cursorFactor) + (-0.5 * outsetRect.height * centerFactor);
             targetWidth = outsetRect.width;
             targetHeight = outsetRect.height;
-            targetBorderRadius = 0; // When hovering over UI elements, snap into sharp box
+            targetBorderRadius = isSliderThumb ? 0 : 0; // Crisp sharp geometric outline
 
             const elementCenterX = outsetRect.left + outsetRect.width / 2;
             const elementCenterY = outsetRect.top + outsetRect.height / 2;
