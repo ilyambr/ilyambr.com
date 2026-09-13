@@ -238,14 +238,14 @@
 
             if (isCritter) {
                 hoveredElement.classList.add('critter-hovered');
-                const elementCenterX = rect.left + rect.width / 2;
-                const elementCenterY = rect.top + rect.height / 2;
-                const elemFactor = 0.12;
+                // Critter stays completely stationary (no movement)
+                elementTargetTransformX = 0;
+                elementTargetTransformY = 0;
+                elementCurrentTransformX = 0;
+                elementCurrentTransformY = 0;
+                hoveredElement.style.transform = '';
 
-                elementTargetTransformX = (e.clientX - elementCenterX) * elemFactor;
-                elementTargetTransformY = (e.clientY - elementCenterY) * elemFactor;
-
-                // For critters: hide the square morph box outline so the critter's silhouette outline takes over!
+                // For critters: hide the square morph box outline so the crisp silhouette outline takes over!
                 targetTransformX = -18;
                 targetTransformY = -18;
                 targetWidth = 36;

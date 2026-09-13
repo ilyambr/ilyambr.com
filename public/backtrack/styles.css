@@ -1027,7 +1027,7 @@ body {
     -webkit-user-select: none;
     -webkit-user-drag: none;
     cursor: none !important;
-    will-change: transform;
+    transform: none !important;
 }
 
 .dog-avatar-anchor img {
@@ -1045,8 +1045,8 @@ body {
     -webkit-user-select: none;
     -webkit-user-drag: none;
     pointer-events: none;
-    transition: filter 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    will-change: filter, transform;
+    transition: filter 0.1s ease;
+    transform: none !important;
 }
 
 .dog-avatar-anchor:hover,
@@ -1055,18 +1055,22 @@ body {
     border: none !important;
     outline: none !important;
     box-shadow: none !important;
+    transform: none !important;
 }
 
-/* Critter Hover Outline Highlight (silhouette contour outline, not a square) */
+/* Critter Hover Silhouette Outline (crisp, bold 3.5px white stroke, zero movement, zero hazy glow) */
 .dog-avatar-anchor:hover img,
 .dog-avatar-anchor.critter-hovered img {
-    filter: drop-shadow(1.5px 0 0 rgba(255, 255, 255, 0.95))
-            drop-shadow(-1.5px 0 0 rgba(255, 255, 255, 0.95))
-            drop-shadow(0 1.5px 0 rgba(255, 255, 255, 0.95))
-            drop-shadow(0 -1.5px 0 rgba(255, 255, 255, 0.95))
-            drop-shadow(0 0 10px rgba(255, 255, 255, 0.6))
+    filter: drop-shadow(3.5px 0 0 #ffffff)
+            drop-shadow(-3.5px 0 0 #ffffff)
+            drop-shadow(0 3.5px 0 #ffffff)
+            drop-shadow(0 -3.5px 0 #ffffff)
+            drop-shadow(2.5px 2.5px 0 #ffffff)
+            drop-shadow(-2.5px 2.5px 0 #ffffff)
+            drop-shadow(2.5px -2.5px 0 #ffffff)
+            drop-shadow(-2.5px -2.5px 0 #ffffff)
             drop-shadow(0 -3px 12px rgba(0, 0, 0, 0.5));
-    transform: translateY(-4px) scale(1.02);
+    transform: none !important;
 }
 
 /* Cat Avatar overrides (lower, larger, and desaturated black aesthetic) */
@@ -1081,13 +1085,16 @@ body {
 
 .dog-avatar-anchor.is-cat:hover img,
 .dog-avatar-anchor.is-cat.critter-hovered img {
-    filter: drop-shadow(1.5px 0 0 rgba(255, 255, 255, 0.95))
-            drop-shadow(-1.5px 0 0 rgba(255, 255, 255, 0.95))
-            drop-shadow(0 1.5px 0 rgba(255, 255, 255, 0.95))
-            drop-shadow(0 -1.5px 0 rgba(255, 255, 255, 0.95))
-            drop-shadow(0 0 10px rgba(255, 255, 255, 0.6))
-            drop-shadow(0 -4px 14px rgba(0, 0, 0, 0.75));
-    transform: translateY(-4px) scale(1.02);
+    filter: drop-shadow(3.5px 0 0 #ffffff)
+            drop-shadow(-3.5px 0 0 #ffffff)
+            drop-shadow(0 3.5px 0 #ffffff)
+            drop-shadow(0 -3.5px 0 #ffffff)
+            drop-shadow(2.5px 2.5px 0 #ffffff)
+            drop-shadow(-2.5px 2.5px 0 #ffffff)
+            drop-shadow(2.5px -2.5px 0 #ffffff)
+            drop-shadow(-2.5px -2.5px 0 #ffffff)
+            drop-shadow(0 -4px 14px rgba(0, 0, 0, 0.65));
+    transform: none !important;
 }
 
 @media (max-width: 768px) {
