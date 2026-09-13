@@ -1058,6 +1058,12 @@ body {
     transform: none !important;
 }
 
+/* Critter Hover Outline Highlight: crisp 1.25px silver line (#aeb4bd) tracing silhouette with a 3px gap, matching cursor outline */
+.dog-avatar-anchor:hover img,
+.dog-avatar-anchor.critter-hovered img {
+    filter: url(#critter-outline) drop-shadow(0 -3px 12px rgba(0, 0, 0, 0.5));
+}
+
 /* Cat Avatar overrides (lower, larger, and desaturated black aesthetic) */
 .dog-avatar-anchor.is-cat {
     width: 180px;
@@ -1066,6 +1072,11 @@ body {
 
 .dog-avatar-anchor.is-cat img {
     filter: drop-shadow(0 -4px 14px rgba(0, 0, 0, 0.65));
+}
+
+.dog-avatar-anchor.is-cat:hover img,
+.dog-avatar-anchor.is-cat.critter-hovered img {
+    filter: url(#critter-outline) drop-shadow(0 -4px 14px rgba(0, 0, 0, 0.65));
 }
 
 @media (max-width: 768px) {

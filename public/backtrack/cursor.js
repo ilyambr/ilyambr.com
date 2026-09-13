@@ -277,24 +277,28 @@
             targetTransformY = ((outsetRect.top - e.clientY) * cursorFactor) + (-0.5 * outsetRect.height * centerFactor);
             targetWidth = outsetRect.width;
             targetHeight = outsetRect.height;
-            targetBorderRadius = 0;
-
             if (isCritter) {
+                hoveredElement.classList.add('critter-hovered');
                 // Critter stays completely stationary (no movement)
                 elementTargetTransformX = 0;
                 elementTargetTransformY = 0;
                 elementCurrentTransformX = 0;
                 elementCurrentTransformY = 0;
                 hoveredElement.style.transform = '';
+
+                // Hide the square cursor morph box so the SVG silhouette outline takes over!
+                cursor.classList.add('cursor-hide');
+                cursor.classList.remove('cursor-morph');
             } else {
+                cursor.classList.remove('cursor-hide');
                 const elementCenterX = outsetRect.left + outsetRect.width / 2;
                 const elementCenterY = outsetRect.top + outsetRect.height / 2;
                 elementTargetTransformX = (e.clientX - elementCenterX) * elemFactor;
                 elementTargetTransformY = (e.clientY - elementCenterY) * elemFactor;
+                cursor.classList.add('cursor-morph');
             }
 
             prevHoveredElement = hoveredElement;
-            cursor.classList.add('cursor-morph');
         } else {
             if (prevHoveredElement) {
                 prevHoveredElement.classList.remove('slider-thumb-hovered');

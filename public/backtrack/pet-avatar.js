@@ -21,6 +21,33 @@
             anchor.appendChild(img);
         }
 
+        // Ensure SVG outline filter is available in document for crisp silhouette hover outline
+        if (!document.getElementById('critter-svg-filters')) {
+            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            svg.id = 'critter-svg-filters';
+            svg.setAttribute('aria-hidden', 'true');
+            svg.style.position = 'absolute';
+            svg.style.width = '0';
+            svg.style.height = '0';
+            svg.style.overflow = 'hidden';
+            svg.style.pointerEvents = 'none';
+            svg.innerHTML = `
+                <defs>
+                    <filter id="critter-outline" x="-20%" y="-20%" width="140%" height="140%">
+                        <feMorphology operator="dilate" radius="3" in="SourceAlpha" result="gap" />
+                        <feMorphology operator="dilate" radius="4.25" in="SourceAlpha" result="stroke" />
+                        <feColorMatrix type="matrix" in="stroke" values="0 0 0 0 0.682  0 0 0 0 0.706  0 0 0 0 0.741  0 0 0 1 0" result="silverBorder" />
+                        <feComposite in="silverBorder" in2="gap" operator="out" result="outlineOnly" />
+                        <feMerge>
+                            <feMergeNode in="outlineOnly" />
+                            <feMergeNode in="SourceGraphic" />
+                        </feMerge>
+                    </filter>
+                </defs>
+            `;
+            document.body.appendChild(svg);
+        }
+
         // Create or get context menu container
         let menu = document.getElementById('pet-context-menu');
         if (!menu) {
