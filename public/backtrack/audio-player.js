@@ -128,7 +128,7 @@
 
         convolverNode = audioCtx.createConvolver();
         if (window.createReverbImpulseResponse) {
-            convolverNode.buffer = window.createReverbImpulseResponse(audioCtx, 1.8, 2.4);
+            convolverNode.buffer = window.createReverbImpulseResponse(audioCtx, 2.8, 3.2);
         }
 
         /*
@@ -156,18 +156,18 @@
 
         const now = audioCtx.currentTime;
         if (distantReverbed) {
-            // Pleasant room reverb effect: not excessively far or buried, warm and atmospheric
-            // 45% dry clarity kept so vocals and melody are clearly heard
+            // Distinct "far away down the hall / in the other room" acoustic profile:
+            // Direct dry sound significantly attenuated (18%)
             dryGain.gain.setValueAtTime(dryGain.gain.value, now);
-            dryGain.gain.linearRampToValueAtTime(0.45, now + 0.1);
+            dryGain.gain.linearRampToValueAtTime(0.18, now + 0.1);
 
-            // Gentle lowpass roll-off at 4200 Hz (warm rather than completely muffled)
+            // Muffled distant highs at 2000 Hz through walls/doors
             lowpassNode.frequency.setValueAtTime(lowpassNode.frequency.value, now);
-            lowpassNode.frequency.exponentialRampToValueAtTime(4200, now + 0.1);
+            lowpassNode.frequency.exponentialRampToValueAtTime(2000, now + 0.1);
 
-            // 55% wet reverb tail
+            // Dominant wet reverb reflection (88%)
             wetGain.gain.setValueAtTime(wetGain.gain.value, now);
-            wetGain.gain.linearRampToValueAtTime(0.55, now + 0.1);
+            wetGain.gain.linearRampToValueAtTime(0.88, now + 0.1);
         } else {
             // Main /backtrack landing: crisp, full spectrum, upfront
             dryGain.gain.setValueAtTime(dryGain.gain.value, now);
