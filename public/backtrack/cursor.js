@@ -241,16 +241,6 @@
                     width: thumbSize,
                     height: thumbSize
                 };
-            } else if (isCritter) {
-                const outsetX = 6;
-                const outsetTop = 6;
-                const bottomOffset = 2;
-                outsetRect = {
-                    left: rect.left - outsetX,
-                    top: rect.top - outsetTop,
-                    width: rect.width + outsetX * 2,
-                    height: Math.max(20, (window.innerHeight - (rect.top - outsetTop)) - bottomOffset)
-                };
             } else {
                 const outsetX = 6;
                 const outsetY = 4;
