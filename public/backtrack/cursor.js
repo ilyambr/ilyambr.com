@@ -15,7 +15,7 @@
 
     // Automatically mark all interactive links, buttons, and inputs for magnetic snapping
     function markInteractiveElements() {
-        document.querySelectorAll('a:not(.no-cursor-snap), button:not(.no-cursor-snap), input, select, textarea, [role="button"]:not(.no-cursor-snap)').forEach(el => {
+        document.querySelectorAll('a:not(.no-cursor-snap), button:not(.no-cursor-snap), input:not(.no-cursor-snap):not([type="range"]), select, textarea, [role="button"]:not(.no-cursor-snap)').forEach(el => {
             if (!el.classList.contains('cursor-hover')) {
                 el.classList.add('cursor-hover');
             }
@@ -172,7 +172,7 @@
             hoveredElement = hoveredElement.parentElement;
         }
 
-        if (hoveredElement && (hoveredElement.classList.contains('no-cursor-snap') || hoveredElement.closest('.no-cursor-snap'))) {
+        if (hoveredElement && (hoveredElement.classList.contains('no-cursor-snap') || hoveredElement.closest('.no-cursor-snap') || (hoveredElement.tagName === 'INPUT' && hoveredElement.type === 'range') || hoveredElement.classList.contains('audio-volume-slider') || hoveredElement.closest('.audio-slider-container'))) {
             hoveredElement = null;
         }
 

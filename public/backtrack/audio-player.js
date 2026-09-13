@@ -11,13 +11,13 @@
     const AUDIO_SRC = '/backtrack/audio/for-fun.mp3';
     const STORAGE_KEY_PLAYING = 'backtrack_audio_playing';
     const STORAGE_KEY_MUTED = 'backtrack_audio_muted_v2';
-    const STORAGE_KEY_VOLUME = 'backtrack_audio_volume';
-    const STORAGE_KEY_TIME = 'backtrack_audio_current_time';
-    const STORAGE_KEY_TIMESTAMP = 'backtrack_audio_save_timestamp';
+    const STORAGE_KEY_VOLUME = 'backtrack_audio_volume_v2';
 
-    // Clear legacy storage key that may have been erroneously set to 'true'
+    // Clear legacy storage keys (old muted bug or old saved time)
     try {
         localStorage.removeItem('backtrack_audio_muted');
+        localStorage.removeItem('backtrack_audio_current_time');
+        localStorage.removeItem('backtrack_audio_save_timestamp');
     } catch (_) {}
 
     // Determine whether a given pathname is a subpage
@@ -39,7 +39,7 @@
     let masterGain = null;
     let initialized = false;
 
-    // Retrieve saved user preferences - default NOT muted, default quiet comfortable volume (22%)
+    // Retrieve saved user preferences - default NOT muted, default comfortable 50% volume
     let isMuted = false;
     try {
         const storedMuted = localStorage.getItem(STORAGE_KEY_MUTED);
@@ -48,7 +48,7 @@
         }
     } catch (_) {}
 
-    let savedVolume = 0.22;
+    let savedVolume = 0.50;
     try {
         const storedVol = localStorage.getItem(STORAGE_KEY_VOLUME);
         if (storedVol !== null) {
@@ -59,7 +59,7 @@
         }
     } catch (_) {}
 
-    // Audio Element Setup
+    // Audio Element Setup - reload restarts the song from 0:00
     function setupAudioElement() {
         if (audioElement) return audioElement;
 
@@ -68,55 +68,7 @@
         audioElement.loop = true;
         audioElement.preload = 'auto';
         audioElement.crossOrigin = 'anonymous';
-
-        // Restore playback position seamlessly across page navigation
-        try {
-            const savedTime = parseFloat(localStorage.getItem(STORAGE_KEY_TIME));
-            const savedTimestamp = parseFloat(localStorage.getItem(STORAGE_KEY_TIMESTAMP));
-            if (!isNaN(savedTime)) {
-                let targetTime = savedTime;
-                if (!isNaN(savedTimestamp)) {
-                    const elapsed = (Date.now() - savedTimestamp) / 1000;
-                    if (elapsed > 0 && elapsed < 30) {
-                        targetTime += elapsed;
-                    }
-                }
-
-                const applySeek = () => {
-                    if (audioElement.duration && targetTime > audioElement.duration) {
-                        targetTime = targetTime % audioElement.duration;
-                    }
-                    audioElement.currentTime = targetTime;
-                };
-
-                if (audioElement.readyState >= 1) {
-                    applySeek();
-                } else {
-                    audioElement.addEventListener('loadedmetadata', applySeek, { once: true });
-                }
-            }
-        } catch (_) {}
-
-        // Periodic state persistence
-        setInterval(() => {
-            if (audioElement && !audioElement.paused) {
-                try {
-                    localStorage.setItem(STORAGE_KEY_TIME, audioElement.currentTime.toString());
-                    localStorage.setItem(STORAGE_KEY_TIMESTAMP, Date.now().toString());
-                } catch (_) {}
-            }
-        }, 1000);
-
-        const saveState = () => {
-            if (audioElement) {
-                try {
-                    localStorage.setItem(STORAGE_KEY_TIME, audioElement.currentTime.toString());
-                    localStorage.setItem(STORAGE_KEY_TIMESTAMP, Date.now().toString());
-                } catch (_) {}
-            }
-        };
-        window.addEventListener('beforeunload', saveState);
-        window.addEventListener('pagehide', saveState);
+        audioElement.currentTime = 0;
 
         return audioElement;
     }
@@ -331,10 +283,10 @@
         }
     }
 
-    // Construct Footer UI Widget
+    // Construct Audio Widget (positioned right under header buttons)
     function injectAudioControls() {
-        const footerContent = document.querySelector('.footer-content');
-        if (!footerContent) return;
+        const siteHeader = document.querySelector('.site-header');
+        if (!siteHeader) return;
 
         // Check if already injected
         if (document.getElementById('backtrack-audio-widget')) {
@@ -342,19 +294,27 @@
             return;
         }
 
+        let bar = document.getElementById('header-audio-bar');
+        if (!bar) {
+            bar = document.createElement('div');
+            bar.id = 'header-audio-bar';
+            bar.className = 'header-audio-bar';
+            siteHeader.parentNode.insertBefore(bar, siteHeader.nextSibling);
+        }
+
         const widget = document.createElement('div');
         widget.id = 'backtrack-audio-widget';
         widget.className = 'backtrack-audio-widget';
 
         widget.innerHTML = `
-            <div class="audio-track-info cursor-hover" title="Now Playing: For Fun (Click to toggle playback)" style="cursor: pointer;">
+            <div class="audio-track-info cursor-hover" title="For Fun" style="cursor: pointer;">
                 <span class="audio-wave-icon" aria-hidden="true">
                     <span></span><span></span><span></span><span></span>
                 </span>
                 <span class="audio-track-label">for fun</span>
             </div>
             <div class="audio-controls-group">
-                <button type="button" class="audio-mute-btn cursor-hover" aria-label="Mute Audio" title="Mute / Unmute Audio">
+                <button type="button" class="audio-mute-btn cursor-hover" aria-label="Mute Audio">
                     <svg class="audio-icon-unmuted" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
                         <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
@@ -365,19 +325,13 @@
                         <line x1="17" y1="9" x2="23" y2="15"></line>
                     </svg>
                 </button>
-                <div class="audio-slider-container">
-                    <input type="range" class="audio-volume-slider cursor-hover" min="0" max="1" step="0.01" value="${savedVolume}" aria-label="Volume Slider" title="Volume">
+                <div class="audio-slider-container no-cursor-snap">
+                    <input type="range" class="audio-volume-slider no-cursor-snap" min="0" max="1" step="0.01" value="${savedVolume}" aria-label="Volume Slider">
                 </div>
             </div>
         `;
 
-        // Insert between footer brand/logo and footer links
-        const footerLinks = footerContent.querySelector('.footer-links');
-        if (footerLinks) {
-            footerContent.insertBefore(widget, footerLinks);
-        } else {
-            footerContent.appendChild(widget);
-        }
+        bar.appendChild(widget);
 
         const muteBtn = widget.querySelector('.audio-mute-btn');
         const slider = widget.querySelector('.audio-volume-slider');
