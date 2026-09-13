@@ -1,43 +1,63 @@
 /**
- * Backtrack Ambient Audio Engine & Controls
- * Plays "For Fun.mp3" across /backtrack/ and its subsidiaries (/privacy, /terms, /thanks).
- * Applies pleasant room reverb on subpages, clear and direct on /backtrack/ landing.
+ * Backtrack Ambient Audio Engine & Seamless Navigation Controls
+ * Plays "For Fun.mp3" continuously across /backtrack/ and its subsidiaries (/privacy, /terms, /thanks).
+ * Applies pleasant room reverb on subpages, clear and direct on /backtrack/ landing, with volume parity.
  * Includes sleek retro/monospace mute and volume controls in the footer.
+ * Provides client-side PJAX navigation across /backtrack pages to eliminate playback pauses.
  */
 (function () {
     'use strict';
 
     const AUDIO_SRC = '/backtrack/audio/for-fun.mp3';
     const STORAGE_KEY_PLAYING = 'backtrack_audio_playing';
-    const STORAGE_KEY_MUTED = 'backtrack_audio_muted';
+    const STORAGE_KEY_MUTED = 'backtrack_audio_muted_v2';
     const STORAGE_KEY_VOLUME = 'backtrack_audio_volume';
     const STORAGE_KEY_TIME = 'backtrack_audio_current_time';
     const STORAGE_KEY_TIMESTAMP = 'backtrack_audio_save_timestamp';
 
-    // Determine whether the current path is a subpage (/backtrack/privacy, /terms, /thanks, etc.)
-    // Note: Excludes docs (docs.ilyambr.com is on separate domain and not affected)
-    const path = window.location.pathname.replace(/\/+$/, '');
-    const isSubpage = path.startsWith('/backtrack/') && path !== '/backtrack';
+    // Clear legacy storage key that may have been erroneously set to 'true'
+    try {
+        localStorage.removeItem('backtrack_audio_muted');
+    } catch (_) {}
+
+    // Determine whether a given pathname is a subpage
+    function checkIsSubpage(pathname) {
+        const clean = (pathname || window.location.pathname).replace(/\/+$/, '') || '/';
+        return clean.startsWith('/backtrack/') && clean !== '/backtrack';
+    }
 
     let audioCtx = null;
     let audioElement = null;
     let sourceNode = null;
+    let dryFilter = null;
     let dryGain = null;
+    let wetFilter = null;
     let wetGain = null;
-    let lowpassNode = null;
     let convolverNode = null;
+    let submixGain = null;
+    let compressorNode = null;
     let masterGain = null;
     let initialized = false;
 
     // Retrieve saved user preferences - default NOT muted, default quiet comfortable volume (22%)
-    const storedMuted = localStorage.getItem(STORAGE_KEY_MUTED);
-    let isMuted = storedMuted === 'true'; // false if never set
+    let isMuted = false;
+    try {
+        const storedMuted = localStorage.getItem(STORAGE_KEY_MUTED);
+        if (storedMuted !== null) {
+            isMuted = storedMuted === 'true';
+        }
+    } catch (_) {}
 
-    const storedVol = localStorage.getItem(STORAGE_KEY_VOLUME);
-    let savedVolume = storedVol !== null ? parseFloat(storedVol) : 0.22;
-    if (isNaN(savedVolume)) {
-        savedVolume = 0.22;
-    }
+    let savedVolume = 0.22;
+    try {
+        const storedVol = localStorage.getItem(STORAGE_KEY_VOLUME);
+        if (storedVol !== null) {
+            const parsed = parseFloat(storedVol);
+            if (!isNaN(parsed) && parsed >= 0 && parsed <= 1) {
+                savedVolume = parsed;
+            }
+        }
+    } catch (_) {}
 
     // Audio Element Setup
     function setupAudioElement() {
@@ -50,54 +70,53 @@
         audioElement.crossOrigin = 'anonymous';
 
         // Restore playback position seamlessly across page navigation
-        const savedTime = parseFloat(localStorage.getItem(STORAGE_KEY_TIME));
-        const savedTimestamp = parseFloat(localStorage.getItem(STORAGE_KEY_TIMESTAMP));
-        if (!isNaN(savedTime)) {
-            let targetTime = savedTime;
-            if (!isNaN(savedTimestamp)) {
-                const elapsed = (Date.now() - savedTimestamp) / 1000;
-                if (elapsed > 0 && elapsed < 30) {
-                    targetTime += elapsed;
+        try {
+            const savedTime = parseFloat(localStorage.getItem(STORAGE_KEY_TIME));
+            const savedTimestamp = parseFloat(localStorage.getItem(STORAGE_KEY_TIMESTAMP));
+            if (!isNaN(savedTime)) {
+                let targetTime = savedTime;
+                if (!isNaN(savedTimestamp)) {
+                    const elapsed = (Date.now() - savedTimestamp) / 1000;
+                    if (elapsed > 0 && elapsed < 30) {
+                        targetTime += elapsed;
+                    }
                 }
-            }
 
-            // Seek as soon as metadata is ready or immediately
-            if (audioElement.readyState >= 1) {
-                if (audioElement.duration && targetTime > audioElement.duration) {
-                    targetTime = targetTime % audioElement.duration;
-                }
-                audioElement.currentTime = targetTime;
-            } else {
-                audioElement.addEventListener('loadedmetadata', () => {
+                const applySeek = () => {
                     if (audioElement.duration && targetTime > audioElement.duration) {
                         targetTime = targetTime % audioElement.duration;
                     }
                     audioElement.currentTime = targetTime;
-                }, { once: true });
+                };
+
+                if (audioElement.readyState >= 1) {
+                    applySeek();
+                } else {
+                    audioElement.addEventListener('loadedmetadata', applySeek, { once: true });
+                }
             }
-        }
+        } catch (_) {}
 
         // Periodic state persistence
         setInterval(() => {
             if (audioElement && !audioElement.paused) {
-                localStorage.setItem(STORAGE_KEY_TIME, audioElement.currentTime.toString());
-                localStorage.setItem(STORAGE_KEY_TIMESTAMP, Date.now().toString());
+                try {
+                    localStorage.setItem(STORAGE_KEY_TIME, audioElement.currentTime.toString());
+                    localStorage.setItem(STORAGE_KEY_TIMESTAMP, Date.now().toString());
+                } catch (_) {}
             }
-        }, 800);
+        }, 1000);
 
-        window.addEventListener('beforeunload', () => {
+        const saveState = () => {
             if (audioElement) {
-                localStorage.setItem(STORAGE_KEY_TIME, audioElement.currentTime.toString());
-                localStorage.setItem(STORAGE_KEY_TIMESTAMP, Date.now().toString());
+                try {
+                    localStorage.setItem(STORAGE_KEY_TIME, audioElement.currentTime.toString());
+                    localStorage.setItem(STORAGE_KEY_TIMESTAMP, Date.now().toString());
+                } catch (_) {}
             }
-        });
-
-        window.addEventListener('pagehide', () => {
-            if (audioElement) {
-                localStorage.setItem(STORAGE_KEY_TIME, audioElement.currentTime.toString());
-                localStorage.setItem(STORAGE_KEY_TIMESTAMP, Date.now().toString());
-            }
-        });
+        };
+        window.addEventListener('beforeunload', saveState);
+        window.addEventListener('pagehide', saveState);
 
         return audioElement;
     }
@@ -116,68 +135,96 @@
         }
 
         sourceNode = audioCtx.createMediaElementSource(audioElement);
-        masterGain = audioCtx.createGain();
 
-        // Dry Path
+        // Dry Path (Direct Sound)
+        dryFilter = audioCtx.createBiquadFilter();
+        dryFilter.type = 'lowpass';
         dryGain = audioCtx.createGain();
 
-        // Wet (Reverb + Gentle Lowpass) Path
+        // Wet Path (Acoustic Reverb)
+        wetFilter = audioCtx.createBiquadFilter();
+        wetFilter.type = 'lowpass';
         wetGain = audioCtx.createGain();
-        lowpassNode = audioCtx.createBiquadFilter();
-        lowpassNode.type = 'lowpass';
 
         convolverNode = audioCtx.createConvolver();
         if (window.createReverbImpulseResponse) {
-            convolverNode.buffer = window.createReverbImpulseResponse(audioCtx, 2.8, 3.2);
+            convolverNode.buffer = window.createReverbImpulseResponse(audioCtx, 2.8, 2.4);
         }
+
+        // Submix & Dynamics Leveler (ensures equal perceived loudness between landing and subpages)
+        submixGain = audioCtx.createGain();
+        compressorNode = audioCtx.createDynamicsCompressor();
+        compressorNode.threshold.setValueAtTime(-14, audioCtx.currentTime);
+        compressorNode.knee.setValueAtTime(10, audioCtx.currentTime);
+        compressorNode.ratio.setValueAtTime(2.5, audioCtx.currentTime);
+        compressorNode.attack.setValueAtTime(0.01, audioCtx.currentTime);
+        compressorNode.release.setValueAtTime(0.2, audioCtx.currentTime);
+
+        // Master Output Gain
+        masterGain = audioCtx.createGain();
 
         /*
          * Graph routing:
-         * sourceNode -> dryGain -------------> masterGain -> audioCtx.destination
-         *            \-> lowpass -> convolver -> wetGain /
+         * sourceNode ────┬──> dryFilter ──> dryGain ──────────┐
+         *                └──> wetFilter ──> convolver ──> wetGain ──┴──> submixGain ──> compressorNode ──> masterGain ──> destination
          */
-        sourceNode.connect(dryGain);
-        dryGain.connect(masterGain);
+        sourceNode.connect(dryFilter);
+        dryFilter.connect(dryGain);
+        dryGain.connect(submixGain);
 
-        sourceNode.connect(lowpassNode);
-        lowpassNode.connect(convolverNode);
+        sourceNode.connect(wetFilter);
+        wetFilter.connect(convolverNode);
         convolverNode.connect(wetGain);
-        wetGain.connect(masterGain);
+        wetGain.connect(submixGain);
 
+        submixGain.connect(compressorNode);
+        compressorNode.connect(masterGain);
         masterGain.connect(audioCtx.destination);
 
-        applyAcousticProfile(isSubpage);
+        applyAcousticProfile(checkIsSubpage(), false);
         applyVolume();
     }
 
     // Configure wet/dry and frequency filtering depending on whether page is main landing or subpage
-    function applyAcousticProfile(distantReverbed) {
-        if (!audioCtx) return;
+    function applyAcousticProfile(distantReverbed, smooth = false) {
+        if (!audioCtx || !dryGain || !wetGain || !dryFilter || !wetFilter || !submixGain) return;
 
         const now = audioCtx.currentTime;
+        const rampTime = smooth ? 0.35 : 0.02;
+
         if (distantReverbed) {
-            // Far-away reverbed profile with volume parity (no drop in loudness):
-            // Dry sound present at 0.35 with filtered highs
-            dryGain.gain.setValueAtTime(dryGain.gain.value, now);
-            dryGain.gain.linearRampToValueAtTime(0.35, now + 0.1);
-
-            // Lowpass filter at 2600 Hz (softens transients and gives distant room tone without eating all energy)
-            lowpassNode.frequency.setValueAtTime(lowpassNode.frequency.value, now);
-            lowpassNode.frequency.exponentialRampToValueAtTime(2600, now + 0.1);
-
-            // Boosted wet reverb tail (2.2) to compensate for convolver attenuation and keep overall perceived loudness equal
-            wetGain.gain.setValueAtTime(wetGain.gain.value, now);
-            wetGain.gain.linearRampToValueAtTime(2.2, now + 0.1);
+            // Far-away reverbed profile with exact loudness parity:
+            // Direct sound warm and clear (lowpass 4400Hz, dryGain 0.62)
+            // Spacious reverb tail (lowpass 3400Hz, wetGain 1.12)
+            // Submix makeup gain 1.15 to maintain identical RMS energy
+            if (smooth) {
+                dryFilter.frequency.setTargetAtTime(4400, now, rampTime);
+                dryGain.gain.setTargetAtTime(0.62, now, rampTime);
+                wetFilter.frequency.setTargetAtTime(3400, now, rampTime);
+                wetGain.gain.setTargetAtTime(1.12, now, rampTime);
+                submixGain.gain.setTargetAtTime(1.15, now, rampTime);
+            } else {
+                dryFilter.frequency.setValueAtTime(4400, now);
+                dryGain.gain.setValueAtTime(0.62, now);
+                wetFilter.frequency.setValueAtTime(3400, now);
+                wetGain.gain.setValueAtTime(1.12, now);
+                submixGain.gain.setValueAtTime(1.15, now);
+            }
         } else {
-            // Main /backtrack landing: crisp, full spectrum, upfront
-            dryGain.gain.setValueAtTime(dryGain.gain.value, now);
-            dryGain.gain.linearRampToValueAtTime(1.0, now + 0.1);
-
-            lowpassNode.frequency.setValueAtTime(lowpassNode.frequency.value, now);
-            lowpassNode.frequency.exponentialRampToValueAtTime(16000, now + 0.1);
-
-            wetGain.gain.setValueAtTime(wetGain.gain.value, now);
-            wetGain.gain.linearRampToValueAtTime(0.0, now + 0.1);
+            // Main /backtrack landing: crisp, full spectrum, upfront direct sound
+            if (smooth) {
+                dryFilter.frequency.setTargetAtTime(20000, now, rampTime);
+                dryGain.gain.setTargetAtTime(1.0, now, rampTime);
+                wetFilter.frequency.setTargetAtTime(20000, now, rampTime);
+                wetGain.gain.setTargetAtTime(0.0, now, rampTime);
+                submixGain.gain.setTargetAtTime(1.0, now, rampTime);
+            } else {
+                dryFilter.frequency.setValueAtTime(20000, now);
+                dryGain.gain.setValueAtTime(1.0, now);
+                wetFilter.frequency.setValueAtTime(20000, now);
+                wetGain.gain.setValueAtTime(0.0, now);
+                submixGain.gain.setValueAtTime(1.0, now);
+            }
         }
     }
 
@@ -202,10 +249,12 @@
 
         try {
             await audioElement.play();
-            localStorage.setItem(STORAGE_KEY_PLAYING, 'true');
+            try {
+                localStorage.setItem(STORAGE_KEY_PLAYING, 'true');
+            } catch (_) {}
             updateUI();
         } catch (e) {
-            // Browser autoplay policy blocked unprompted playback: resume on first user interaction anywhere
+            // Browser autoplay policy blocked unprompted playback: unlock on user interaction anywhere
             const resumeOnGesture = async () => {
                 if (audioCtx && audioCtx.state === 'suspended') {
                     try {
@@ -215,26 +264,36 @@
                 if (audioElement && audioElement.paused) {
                     try {
                         await audioElement.play();
-                        localStorage.setItem(STORAGE_KEY_PLAYING, 'true');
+                        try {
+                            localStorage.setItem(STORAGE_KEY_PLAYING, 'true');
+                        } catch (_) {}
                         updateUI();
                     } catch (_) {}
                 }
-                window.removeEventListener('click', resumeOnGesture);
-                window.removeEventListener('keydown', resumeOnGesture);
-                window.removeEventListener('scroll', resumeOnGesture);
+                ['click', 'pointerdown', 'keydown', 'touchstart'].forEach(evt => {
+                    window.removeEventListener(evt, resumeOnGesture);
+                    document.removeEventListener(evt, resumeOnGesture);
+                });
             };
-            window.addEventListener('click', resumeOnGesture, { once: true });
-            window.addEventListener('keydown', resumeOnGesture, { once: true });
-            window.addEventListener('scroll', resumeOnGesture, { once: true });
+
+            ['click', 'pointerdown', 'keydown', 'touchstart'].forEach(evt => {
+                window.addEventListener(evt, resumeOnGesture, { once: true, passive: true });
+                document.addEventListener(evt, resumeOnGesture, { once: true, passive: true });
+            });
         }
     }
 
     function toggleMute() {
         isMuted = !isMuted;
-        localStorage.setItem(STORAGE_KEY_MUTED, isMuted ? 'true' : 'false');
+        try {
+            localStorage.setItem(STORAGE_KEY_MUTED, isMuted ? 'true' : 'false');
+        } catch (_) {}
         applyVolume();
         updateUI();
 
+        if (audioCtx && audioCtx.state === 'suspended') {
+            audioCtx.resume().catch(() => {});
+        }
         if (audioElement && audioElement.paused && !isMuted) {
             startAudio();
         }
@@ -242,18 +301,29 @@
 
     function setVolume(val) {
         savedVolume = Math.max(0, Math.min(1, parseFloat(val)));
-        localStorage.setItem(STORAGE_KEY_VOLUME, savedVolume.toString());
+        try {
+            localStorage.setItem(STORAGE_KEY_VOLUME, savedVolume.toString());
+        } catch (_) {}
+
         if (savedVolume > 0 && isMuted) {
             isMuted = false;
-            localStorage.setItem(STORAGE_KEY_MUTED, 'false');
+            try {
+                localStorage.setItem(STORAGE_KEY_MUTED, 'false');
+            } catch (_) {}
         } else if (savedVolume === 0) {
             isMuted = true;
-            localStorage.setItem(STORAGE_KEY_MUTED, 'true');
+            try {
+                localStorage.setItem(STORAGE_KEY_MUTED, 'true');
+            } catch (_) {}
         }
+
         applyVolume();
         updateUI();
 
-        if (audioElement && audioElement.paused && savedVolume > 0) {
+        if (audioCtx && audioCtx.state === 'suspended') {
+            audioCtx.resume().catch(() => {});
+        }
+        if (audioElement && audioElement.paused && savedVolume > 0 && !isMuted) {
             startAudio();
         }
     }
@@ -264,21 +334,24 @@
         if (!footerContent) return;
 
         // Check if already injected
-        if (document.getElementById('backtrack-audio-widget')) return;
+        if (document.getElementById('backtrack-audio-widget')) {
+            updateUI();
+            return;
+        }
 
         const widget = document.createElement('div');
         widget.id = 'backtrack-audio-widget';
         widget.className = 'backtrack-audio-widget';
 
         widget.innerHTML = `
-            <div class="audio-track-info" title="Now Playing: For Fun">
+            <div class="audio-track-info cursor-hover" title="Now Playing: For Fun (Click to toggle playback)" style="cursor: pointer;">
                 <span class="audio-wave-icon" aria-hidden="true">
                     <span></span><span></span><span></span><span></span>
                 </span>
                 <span class="audio-track-label">for fun</span>
             </div>
             <div class="audio-controls-group">
-                <button type="button" class="audio-mute-btn cursor-hover" aria-label="Mute / Unmute" title="Mute / Unmute Audio">
+                <button type="button" class="audio-mute-btn cursor-hover" aria-label="Mute Audio" title="Mute / Unmute Audio">
                     <svg class="audio-icon-unmuted" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
                         <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
@@ -295,7 +368,7 @@
             </div>
         `;
 
-        // Insert between footer brand/logo and footer links, or append nicely
+        // Insert between footer brand/logo and footer links
         const footerLinks = footerContent.querySelector('.footer-links');
         if (footerLinks) {
             footerContent.insertBefore(widget, footerLinks);
@@ -305,6 +378,7 @@
 
         const muteBtn = widget.querySelector('.audio-mute-btn');
         const slider = widget.querySelector('.audio-volume-slider');
+        const trackInfo = widget.querySelector('.audio-track-info');
 
         muteBtn.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -314,6 +388,24 @@
         slider.addEventListener('input', (e) => {
             setVolume(e.target.value);
         });
+
+        if (trackInfo) {
+            trackInfo.addEventListener('click', () => {
+                if (audioElement && !audioElement.paused) {
+                    audioElement.pause();
+                    updateUI();
+                } else {
+                    if (isMuted) {
+                        isMuted = false;
+                        try {
+                            localStorage.setItem(STORAGE_KEY_MUTED, 'false');
+                        } catch (_) {}
+                        applyVolume();
+                    }
+                    startAudio();
+                }
+            });
+        }
 
         // Trigger cursor engine to register interactive elements for magnetic snap
         if (window.cursorEngine && typeof window.cursorEngine.refreshTargets === 'function') {
@@ -328,27 +420,135 @@
         if (!widget) return;
 
         const isPlaying = audioElement && !audioElement.paused;
-        const effectivelyAudible = isPlaying && !isMuted && savedVolume > 0;
+        const isAudible = isPlaying && !isMuted && savedVolume > 0;
 
-        if (effectivelyAudible) {
-            widget.classList.add('is-audible');
-            widget.classList.remove('is-muted');
-        } else {
-            widget.classList.remove('is-audible');
-            widget.classList.add('is-muted');
-        }
+        // Waveform animation reflects whether sound is actively playing
+        widget.classList.toggle('is-audible', isAudible);
+
+        // Mute state reflects purely the user mute setting (NOT autoplay pause)
+        const effectivelyMuted = isMuted || savedVolume === 0;
+        widget.classList.toggle('is-muted', effectivelyMuted);
 
         const slider = widget.querySelector('.audio-volume-slider');
         if (slider) {
-            slider.value = isMuted ? 0 : savedVolume;
-            const pct = (slider.value * 100).toFixed(0);
+            const displayVol = effectivelyMuted ? 0 : savedVolume;
+            slider.value = displayVol;
+            const pct = (displayVol * 100).toFixed(0);
             slider.style.setProperty('--slider-fill', `${pct}%`);
         }
 
         const muteBtn = widget.querySelector('.audio-mute-btn');
         if (muteBtn) {
-            muteBtn.setAttribute('aria-label', isMuted ? 'Unmute Audio' : 'Mute Audio');
+            muteBtn.setAttribute('aria-label', effectivelyMuted ? 'Unmute Audio' : 'Mute Audio');
         }
+    }
+
+    // Seamless Client-Side Navigation (PJAX) across Backtrack
+    // Keeps audio playing continuously without pause when switching between pages
+    async function loadPage(targetUrl, pushState = true) {
+        try {
+            const response = await fetch(targetUrl);
+            if (!response.ok) {
+                window.location.href = targetUrl;
+                return;
+            }
+
+            const html = await response.text();
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+
+            // 1. Update Document Title
+            document.title = doc.title;
+
+            // 2. Update Header (breadcrumbs and navigation states)
+            const newHeader = doc.querySelector('.site-header');
+            const curHeader = document.querySelector('.site-header');
+            if (newHeader && curHeader) {
+                curHeader.innerHTML = newHeader.innerHTML;
+            }
+
+            // 3. Update Main Content Container
+            const newMain = doc.querySelector('main');
+            const curMain = document.querySelector('main');
+            if (newMain && curMain) {
+                curMain.className = newMain.className;
+                curMain.innerHTML = newMain.innerHTML;
+            }
+
+            // 4. Update History State
+            if (pushState) {
+                window.history.pushState({}, '', targetUrl);
+            }
+
+            // 5. Smoothly transition acoustic space (0s pause, real-time Web Audio morphing)
+            const newUrl = new URL(targetUrl, window.location.origin);
+            const isSub = checkIsSubpage(newUrl.pathname);
+            applyAcousticProfile(isSub, true);
+
+            // 6. Handle Scroll Position
+            if (newUrl.hash) {
+                const targetEl = document.querySelector(newUrl.hash);
+                if (targetEl) {
+                    targetEl.scrollIntoView();
+                }
+            } else {
+                window.scrollTo({ top: 0, behavior: 'instant' });
+            }
+
+            // 7. Refresh Cursor Targets
+            if (window.cursorEngine && typeof window.cursorEngine.refreshTargets === 'function') {
+                window.cursorEngine.refreshTargets();
+            }
+
+            updateUI();
+        } catch (err) {
+            console.error('Seamless transition fallback to full reload:', err);
+            window.location.href = targetUrl;
+        }
+    }
+
+    function setupSeamlessNavigation() {
+        document.addEventListener('click', (e) => {
+            // Find closest anchor tag
+            const anchor = e.target.closest('a');
+            if (!anchor) return;
+
+            const href = anchor.getAttribute('href');
+            if (!href) return;
+
+            // Allow external links, blank targets, non-HTTP links, or modifier clicks to behave normally
+            if (anchor.target === '_blank' || href.startsWith('mailto:') || href.startsWith('tel:')) return;
+            if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+
+            const url = new URL(anchor.href, window.location.origin);
+
+            // Ensure destination is on the same origin
+            if (url.origin !== window.location.origin) return;
+
+            // Check if internal Backtrack navigation
+            const targetPath = url.pathname.replace(/\/+$/, '') || '/';
+            const isBacktrackTarget = targetPath === '/backtrack' || targetPath.startsWith('/backtrack/');
+            if (!isBacktrackTarget) return;
+
+            // If same page hash navigation, let browser scroll naturally
+            if (url.pathname === window.location.pathname && url.hash) {
+                return;
+            }
+
+            e.preventDefault();
+
+            // If navigating to the exact current URL, just scroll to top
+            if (url.href === window.location.href) {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                return;
+            }
+
+            loadPage(url.href, true);
+        });
+
+        window.addEventListener('popstate', () => {
+            loadPage(window.location.href, false);
+        });
     }
 
     // Initialize
@@ -357,6 +557,7 @@
         initialized = true;
 
         injectAudioControls();
+        setupSeamlessNavigation();
         startAudio();
     }
 
@@ -366,3 +567,4 @@
         init();
     }
 })();
+
