@@ -156,18 +156,18 @@
 
         const now = audioCtx.currentTime;
         if (distantReverbed) {
-            // Distinct "far away down the hall / in the other room" acoustic profile:
-            // Direct dry sound significantly attenuated (18%)
+            // Far-away reverbed profile with volume parity (no drop in loudness):
+            // Dry sound present at 0.35 with filtered highs
             dryGain.gain.setValueAtTime(dryGain.gain.value, now);
-            dryGain.gain.linearRampToValueAtTime(0.18, now + 0.1);
+            dryGain.gain.linearRampToValueAtTime(0.35, now + 0.1);
 
-            // Muffled distant highs at 2000 Hz through walls/doors
+            // Lowpass filter at 2600 Hz (softens transients and gives distant room tone without eating all energy)
             lowpassNode.frequency.setValueAtTime(lowpassNode.frequency.value, now);
-            lowpassNode.frequency.exponentialRampToValueAtTime(2000, now + 0.1);
+            lowpassNode.frequency.exponentialRampToValueAtTime(2600, now + 0.1);
 
-            // Dominant wet reverb reflection (88%)
+            // Boosted wet reverb tail (2.2) to compensate for convolver attenuation and keep overall perceived loudness equal
             wetGain.gain.setValueAtTime(wetGain.gain.value, now);
-            wetGain.gain.linearRampToValueAtTime(0.88, now + 0.1);
+            wetGain.gain.linearRampToValueAtTime(2.2, now + 0.1);
         } else {
             // Main /backtrack landing: crisp, full spectrum, upfront
             dryGain.gain.setValueAtTime(dryGain.gain.value, now);
