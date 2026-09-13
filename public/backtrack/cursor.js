@@ -172,15 +172,8 @@
             hoveredElement = hoveredElement.parentElement;
         }
 
-        let isCritter = false;
-        let critterAnchor = null;
-        if (hoveredElement) {
-            critterAnchor = hoveredElement.classList.contains('dog-avatar-anchor') ? hoveredElement : hoveredElement.closest('.dog-avatar-anchor');
-        }
-        if (critterAnchor) {
-            isCritter = true;
-            hoveredElement = critterAnchor;
-        } else if (hoveredElement && (hoveredElement.classList.contains('no-cursor-snap') || hoveredElement.closest('.no-cursor-snap'))) {
+        // Ignore no-cursor-snap elements and critter (no hover effects)
+        if (hoveredElement && (hoveredElement.classList.contains('no-cursor-snap') || hoveredElement.closest('.no-cursor-snap') || hoveredElement.classList.contains('dog-avatar-anchor') || hoveredElement.closest('.dog-avatar-anchor'))) {
             hoveredElement = null;
         }
 
@@ -277,32 +270,17 @@
             targetTransformY = ((outsetRect.top - e.clientY) * cursorFactor) + (-0.5 * outsetRect.height * centerFactor);
             targetWidth = outsetRect.width;
             targetHeight = outsetRect.height;
-            if (isCritter) {
-                hoveredElement.classList.add('critter-hovered');
-                // Critter stays completely stationary (no movement)
-                elementTargetTransformX = 0;
-                elementTargetTransformY = 0;
-                elementCurrentTransformX = 0;
-                elementCurrentTransformY = 0;
-                hoveredElement.style.transform = '';
-
-                // Hide the square cursor morph box so the SVG silhouette outline takes over!
-                cursor.classList.add('cursor-hide');
-                cursor.classList.remove('cursor-morph');
-            } else {
-                cursor.classList.remove('cursor-hide');
-                const elementCenterX = outsetRect.left + outsetRect.width / 2;
-                const elementCenterY = outsetRect.top + outsetRect.height / 2;
-                elementTargetTransformX = (e.clientX - elementCenterX) * elemFactor;
-                elementTargetTransformY = (e.clientY - elementCenterY) * elemFactor;
-                cursor.classList.add('cursor-morph');
-            }
+            cursor.classList.remove('cursor-hide');
+            const elementCenterX = outsetRect.left + outsetRect.width / 2;
+            const elementCenterY = outsetRect.top + outsetRect.height / 2;
+            elementTargetTransformX = (e.clientX - elementCenterX) * elemFactor;
+            elementTargetTransformY = (e.clientY - elementCenterY) * elemFactor;
+            cursor.classList.add('cursor-morph');
 
             prevHoveredElement = hoveredElement;
         } else {
             if (prevHoveredElement) {
                 prevHoveredElement.classList.remove('slider-thumb-hovered');
-                prevHoveredElement.classList.remove('critter-hovered');
                 prevHoveredElement.style.transform = '';
                 prevHoveredElement = null;
             }

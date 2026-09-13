@@ -266,24 +266,8 @@
         </div>
     </footer>
 
-    <!-- Critter SVG Silhouette Outline Filter -->
-    <svg id="critter-svg-filters" aria-hidden="true" style="position: absolute; width: 0; height: 0; overflow: hidden; pointer-events: none;">
-        <defs>
-            <filter id="critter-outline" x="-20%" y="-20%" width="140%" height="140%">
-                <feMorphology operator="dilate" radius="3" in="SourceAlpha" result="gap" />
-                <feMorphology operator="dilate" radius="4.25" in="SourceAlpha" result="stroke" />
-                <feColorMatrix type="matrix" in="stroke" values="0 0 0 0 0.682  0 0 0 0 0.706  0 0 0 0 0.741  0 0 0 1 0" result="silverBorder" />
-                <feComposite in="silverBorder" in2="gap" operator="out" result="outlineOnly" />
-                <feMerge>
-                    <feMergeNode in="outlineOnly" />
-                    <feMergeNode in="SourceGraphic" />
-                </feMerge>
-            </filter>
-        </defs>
-    </svg>
-
     <!-- Dog / Cat Avatar Floating Profile Link -->
-    <a href="https://ilyambr.com/dog" target="_blank" rel="noopener" class="dog-avatar-anchor cursor-hover" aria-label="Dog Avatar (ilyambr.com/dog)" title="ilyambr.com/dog">
+    <a href="https://ilyambr.com/dog" target="_blank" rel="noopener" class="dog-avatar-anchor no-cursor-snap" aria-label="Dog Avatar (ilyambr.com/dog)" title="ilyambr.com/dog">
         <img src="/backtrack/dog-avatar.png" alt="Dog Avatar">
     </a>
 
