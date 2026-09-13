@@ -1055,8 +1055,8 @@ body {
 
 /* Cat Avatar overrides (lower, larger, and desaturated black aesthetic) */
 .dog-avatar-anchor.is-cat {
-    width: 190px;
-    bottom: -18px;
+    width: 180px;
+    bottom: 0;
 }
 
 .dog-avatar-anchor.is-cat img {
@@ -1068,9 +1068,8 @@ body {
         width: 130px;
         right: 1rem;
     }
-    .dog-avatar-anchor.is-cat {
-        width: 135px;
-        bottom: -12px;
+.dog-avatar-anchor.is-cat {
+        width: 130px;
         right: 1rem;
     }
 }

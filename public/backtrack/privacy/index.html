@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Privacy Policy — Backtrack</title>
+    <title>privacy</title>
     <meta name="description" content="Privacy policy and local-only data architecture for Backtrack. Zero telemetry, no accounts, and no cloud servers.">
     <link rel="canonical" href="https://ilyambr.com/backtrack/privacy/">
+    <link rel="icon" type="image/png" href="/backtrack/privacy/privacy.png">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:url" content="https://ilyambr.com/backtrack/privacy/">
-    <meta property="og:title" content="Privacy Policy — Backtrack">
+    <meta property="og:title" content="privacy">
     <meta property="og:description" content="Privacy policy and local-only data architecture for Backtrack. Zero telemetry, no accounts, and no cloud servers.">
     <meta property="og:image" content="https://ilyambr.com/backtrack/og-privacy.png">
     <meta property="og:image:width" content="1200">
@@ -20,7 +21,7 @@
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="https://ilyambr.com/backtrack/privacy/">
-    <meta name="twitter:title" content="Privacy Policy — Backtrack">
+    <meta name="twitter:title" content="privacy">
     <meta name="twitter:description" content="Privacy policy and local-only data architecture for Backtrack. Zero telemetry, no accounts, and no cloud servers.">
     <meta name="twitter:image" content="https://ilyambr.com/backtrack/og-privacy.png">
 
@@ -208,10 +209,10 @@
                     </p>
                     <ul>
                         <li>
-                            <strong>Scopes Requested:</strong> Backtrack requests the <code>https://www.googleapis.com/auth/drive.file</code> and <code>https://www.googleapis.com/auth/drive.metadata.readonly</code> scopes.
+                            <strong>Scopes Requested:</strong> Backtrack requests only the <code>https://www.googleapis.com/auth/drive.file</code> scope.
                         </li>
                         <li>
-                            <strong>Access & Data Usage:</strong> Backtrack only accesses files and folders created by the app or explicitly selected by you. It reads folder metadata solely to let you navigate and select a destination folder in your Drive. Your email address is fetched once to display which account is signed in (and can be masked via Streamer Mode).
+                            <strong>Access & Data Usage:</strong> Backtrack only accesses files and folders created by the app (specifically, the dedicated <code>Backtrack</code> folder and subfolders you create for organizing your clips). Backtrack does not access, scan, or read any other files or documents in your Google Drive. Your email address is fetched once to display which account is signed in (and can be masked via Streamer Mode).
                         </li>
                         <li>
                             <strong>Local Credential Storage:</strong> OAuth 2.0 access and refresh tokens are stored exclusively on your local computer, encrypted with the Windows Data Protection API (DPAPI). Backtrack has no servers or telemetry; your credentials and videos never pass through any third-party or developer servers.
