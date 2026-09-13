@@ -15,7 +15,7 @@
 
     // Automatically mark all interactive links, buttons, and inputs for magnetic snapping
     function markInteractiveElements() {
-        document.querySelectorAll('a:not(.no-cursor-snap), button:not(.no-cursor-snap), input:not(.no-cursor-snap):not([type="range"]), select, textarea, [role="button"]:not(.no-cursor-snap)').forEach(el => {
+        document.querySelectorAll('a:not(.no-cursor-snap), button:not(.no-cursor-snap), input:not(.no-cursor-snap), select, textarea, [role="button"]:not(.no-cursor-snap)').forEach(el => {
             if (!el.classList.contains('cursor-hover')) {
                 el.classList.add('cursor-hover');
             }
@@ -172,8 +172,33 @@
             hoveredElement = hoveredElement.parentElement;
         }
 
-        if (hoveredElement && (hoveredElement.classList.contains('no-cursor-snap') || hoveredElement.closest('.no-cursor-snap') || (hoveredElement.tagName === 'INPUT' && hoveredElement.type === 'range') || hoveredElement.classList.contains('audio-volume-slider') || hoveredElement.closest('.audio-slider-container'))) {
+        if (hoveredElement && (hoveredElement.classList.contains('no-cursor-snap') || hoveredElement.closest('.no-cursor-snap'))) {
             hoveredElement = null;
+        }
+
+        let isSliderThumb = false;
+        let thumbCenterX = 0;
+        let thumbCenterY = 0;
+
+        // Specialized check for range slider: only snap and highlight the dot, not the bar
+        if (hoveredElement && hoveredElement.tagName === 'INPUT' && hoveredElement.type === 'range') {
+            const min = parseFloat(hoveredElement.min) || 0;
+            const max = parseFloat(hoveredElement.max) || 1;
+            const val = parseFloat(hoveredElement.value) || 0;
+            const ratio = Math.max(0, Math.min(1, (val - min) / (max - min)));
+            const rect = hoveredElement.getBoundingClientRect();
+            const thumbWidth = 10;
+            thumbCenterX = rect.left + (thumbWidth / 2) + ratio * (rect.width - thumbWidth);
+            thumbCenterY = rect.top + rect.height / 2;
+
+            const distToThumb = Math.hypot(e.clientX - thumbCenterX, e.clientY - thumbCenterY);
+            if (distToThumb < 18) {
+                isSliderThumb = true;
+                hoveredElement.classList.add('slider-thumb-hovered');
+            } else {
+                hoveredElement.classList.remove('slider-thumb-hovered');
+                hoveredElement = null; // Bar track is not highlightable
+            }
         }
 
         if (hoveredElement) {
@@ -192,6 +217,7 @@
             }
 
             if (prevHoveredElement && prevHoveredElement !== hoveredElement) {
+                prevHoveredElement.classList.remove('slider-thumb-hovered');
                 prevHoveredElement.style.transform = '';
                 elementCurrentTransformX = 0;
                 elementCurrentTransformY = 0;
@@ -200,34 +226,11 @@
             }
 
             let rect = hoveredElement.getBoundingClientRect();
-            let isSliderThumb = false;
-            let thumbCenterX = 0;
-            let thumbCenterY = 0;
-
-            // Specialized snapping for range slider thumb dot
-            if (hoveredElement.tagName === 'INPUT' && hoveredElement.type === 'range') {
-                const min = parseFloat(hoveredElement.min) || 0;
-                const max = parseFloat(hoveredElement.max) || 1;
-                const val = parseFloat(hoveredElement.value) || 0;
-                const ratio = Math.max(0, Math.min(1, (val - min) / (max - min)));
-                const thumbWidth = 10; // width of thumb dot
-                thumbCenterX = rect.left + (thumbWidth / 2) + ratio * (rect.width - thumbWidth);
-                thumbCenterY = rect.top + rect.height / 2;
-
-                // Check distance from cursor to thumb center
-                const distToThumb = Math.hypot(e.clientX - thumbCenterX, e.clientY - thumbCenterY);
-                if (distToThumb < 18) {
-                    isSliderThumb = true;
-                    hoveredElement.classList.add('slider-thumb-hovered');
-                } else {
-                    hoveredElement.classList.remove('slider-thumb-hovered');
-                }
-            }
 
             // Outset padding around hovered element or thumb dot
             let outsetRect;
             if (isSliderThumb) {
-                const thumbSize = 12;
+                const thumbSize = 14;
                 outsetRect = {
                     left: thumbCenterX - thumbSize / 2,
                     top: thumbCenterY - thumbSize / 2,
@@ -253,7 +256,7 @@
             targetTransformY = ((outsetRect.top - e.clientY) * cursorFactor) + (-0.5 * outsetRect.height * centerFactor);
             targetWidth = outsetRect.width;
             targetHeight = outsetRect.height;
-            targetBorderRadius = isSliderThumb ? 0 : 0; // Crisp sharp geometric outline
+            targetBorderRadius = 0;
 
             const elementCenterX = outsetRect.left + outsetRect.width / 2;
             const elementCenterY = outsetRect.top + outsetRect.height / 2;
@@ -263,6 +266,12 @@
             prevHoveredElement = hoveredElement;
             cursor.classList.add('cursor-morph');
         } else {
+            if (prevHoveredElement) {
+                prevHoveredElement.classList.remove('slider-thumb-hovered');
+                prevHoveredElement.style.transform = '';
+                prevHoveredElement = null;
+            }
+
             if (hovering) {
                 hovering = false;
                 if (trailContainer) trailContainer.style.display = '';

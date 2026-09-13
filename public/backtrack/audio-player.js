@@ -12,6 +12,122 @@
     const STORAGE_KEY_PLAYING = 'backtrack_audio_playing';
     const STORAGE_KEY_MUTED = 'backtrack_audio_muted_v2';
     const STORAGE_KEY_VOLUME = 'backtrack_audio_volume_v2';
+    const STORAGE_KEY_ACTIVE_TAB = 'backtrack_audio_active_tab_id';
+    const STORAGE_KEY_HEARTBEAT = 'backtrack_audio_heartbeat';
+
+    // Unique identifier for this browser tab
+    const TAB_ID = 'tab_' + Math.random().toString(36).substring(2, 9) + '_' + Date.now();
+    let heartbeatInterval = null;
+    let crossTabChannel = null;
+    try {
+        if (typeof BroadcastChannel !== 'undefined') {
+            crossTabChannel = new BroadcastChannel('backtrack_audio_cross_tab');
+        }
+    } catch (_) {}
+
+    function isAnotherTabPlaying() {
+        try {
+            const activeTab = localStorage.getItem(STORAGE_KEY_ACTIVE_TAB);
+            const heartbeat = parseInt(localStorage.getItem(STORAGE_KEY_HEARTBEAT) || '0', 10);
+            if (activeTab && activeTab !== TAB_ID && (Date.now() - heartbeat < 3500)) {
+                return true;
+            }
+        } catch (_) {}
+        return false;
+    }
+
+    function claimPlayback() {
+        try {
+            localStorage.setItem(STORAGE_KEY_ACTIVE_TAB, TAB_ID);
+            localStorage.setItem(STORAGE_KEY_HEARTBEAT, Date.now().toString());
+        } catch (_) {}
+
+        if (crossTabChannel) {
+            try {
+                crossTabChannel.postMessage({ type: 'CLAIM_PLAYBACK', tabId: TAB_ID });
+            } catch (_) {}
+        }
+
+        startHeartbeat();
+    }
+
+    function releasePlayback() {
+        stopHeartbeat();
+        try {
+            const activeTab = localStorage.getItem(STORAGE_KEY_ACTIVE_TAB);
+            if (activeTab === TAB_ID) {
+                localStorage.removeItem(STORAGE_KEY_ACTIVE_TAB);
+                localStorage.removeItem(STORAGE_KEY_HEARTBEAT);
+            }
+        } catch (_) {}
+
+        if (crossTabChannel) {
+            try {
+                crossTabChannel.postMessage({ type: 'RELEASE_PLAYBACK', tabId: TAB_ID });
+            } catch (_) {}
+        }
+    }
+
+    function startHeartbeat() {
+        stopHeartbeat();
+        heartbeatInterval = setInterval(() => {
+            if (audioElement && !audioElement.paused && !isMuted && savedVolume > 0) {
+                try {
+                    localStorage.setItem(STORAGE_KEY_ACTIVE_TAB, TAB_ID);
+                    localStorage.setItem(STORAGE_KEY_HEARTBEAT, Date.now().toString());
+                } catch (_) {}
+            } else {
+                stopHeartbeat();
+            }
+        }, 1500);
+    }
+
+    function stopHeartbeat() {
+        if (heartbeatInterval) {
+            clearInterval(heartbeatInterval);
+            heartbeatInterval = null;
+        }
+    }
+
+    if (crossTabChannel) {
+        crossTabChannel.onmessage = (event) => {
+            const data = event && event.data;
+            if (!data) return;
+            if (data.type === 'CLAIM_PLAYBACK' && data.tabId !== TAB_ID) {
+                if (audioElement && !audioElement.paused) {
+                    audioElement.pause();
+                    stopHeartbeat();
+                    updateUI();
+                }
+            }
+        };
+    }
+
+    window.addEventListener('storage', (e) => {
+        if (e.key === STORAGE_KEY_ACTIVE_TAB && e.newValue && e.newValue !== TAB_ID) {
+            if (audioElement && !audioElement.paused) {
+                audioElement.pause();
+                stopHeartbeat();
+                updateUI();
+            }
+        }
+    });
+
+    window.addEventListener('pagehide', () => {
+        try {
+            if (localStorage.getItem(STORAGE_KEY_ACTIVE_TAB) === TAB_ID) {
+                releasePlayback();
+            }
+        } catch (_) {}
+    });
+
+    window.addEventListener('beforeunload', () => {
+        try {
+            if (localStorage.getItem(STORAGE_KEY_ACTIVE_TAB) === TAB_ID) {
+                releasePlayback();
+            }
+        } catch (_) {}
+    });
 
     // Clear legacy storage keys (old muted bug or old saved time)
     try {
@@ -69,6 +185,16 @@
         audioElement.preload = 'auto';
         audioElement.crossOrigin = 'anonymous';
         audioElement.currentTime = 0;
+
+        audioElement.addEventListener('play', () => {
+            startHeartbeat();
+            updateUI();
+        });
+
+        audioElement.addEventListener('pause', () => {
+            stopHeartbeat();
+            updateUI();
+        });
 
         return audioElement;
     }
@@ -191,14 +317,24 @@
 
     let userGestureReceived = false;
 
-    function unlockAndPlayAudio() {
+    function onInitialGesture() {
+        ['click', 'pointerdown', 'keydown', 'touchstart'].forEach(evt => {
+            try {
+                window.removeEventListener(evt, onInitialGesture, true);
+                document.removeEventListener(evt, onInitialGesture, true);
+            } catch (_) {}
+        });
+        unlockAndPlayAudio(false);
+    }
+
+    function unlockAndPlayAudio(forcePlay = false) {
         userGestureReceived = true;
 
         // Detach capture-phase gesture listeners
         ['click', 'pointerdown', 'keydown', 'touchstart'].forEach(evt => {
             try {
-                window.removeEventListener(evt, unlockAndPlayAudio, true);
-                document.removeEventListener(evt, unlockAndPlayAudio, true);
+                window.removeEventListener(evt, onInitialGesture, true);
+                document.removeEventListener(evt, onInitialGesture, true);
             } catch (_) {}
         });
 
@@ -209,7 +345,14 @@
             audioCtx.resume().catch(() => {});
         }
 
+        // Check if another tab is currently playing audio
+        if (!forcePlay && isAnotherTabPlaying()) {
+            updateUI();
+            return;
+        }
+
         if (audioElement && audioElement.paused && !isMuted && savedVolume > 0) {
+            claimPlayback();
             audioElement.play().then(() => {
                 try {
                     localStorage.setItem(STORAGE_KEY_PLAYING, 'true');
@@ -226,7 +369,7 @@
         } catch (_) {}
 
         if (!userGestureReceived) {
-            unlockAndPlayAudio();
+            unlockAndPlayAudio(!isMuted);
         }
 
         applyVolume();
@@ -235,13 +378,19 @@
         if (audioCtx && audioCtx.state === 'suspended') {
             audioCtx.resume().catch(() => {});
         }
-        if (audioElement && audioElement.paused && !isMuted) {
-            audioElement.play().then(() => {
-                try {
-                    localStorage.setItem(STORAGE_KEY_PLAYING, 'true');
-                } catch (_) {}
-                updateUI();
-            }).catch(() => {});
+
+        if (isMuted) {
+            releasePlayback();
+        } else {
+            claimPlayback();
+            if (audioElement && audioElement.paused && savedVolume > 0) {
+                audioElement.play().then(() => {
+                    try {
+                        localStorage.setItem(STORAGE_KEY_PLAYING, 'true');
+                    } catch (_) {}
+                    updateUI();
+                }).catch(() => {});
+            }
         }
     }
 
@@ -252,7 +401,7 @@
         } catch (_) {}
 
         if (!userGestureReceived) {
-            unlockAndPlayAudio();
+            unlockAndPlayAudio(savedVolume > 0);
         }
 
         if (savedVolume > 0 && isMuted) {
@@ -265,6 +414,7 @@
             try {
                 localStorage.setItem(STORAGE_KEY_MUTED, 'true');
             } catch (_) {}
+            releasePlayback();
         }
 
         applyVolume();
@@ -273,13 +423,16 @@
         if (audioCtx && audioCtx.state === 'suspended') {
             audioCtx.resume().catch(() => {});
         }
-        if (audioElement && audioElement.paused && savedVolume > 0 && !isMuted) {
-            audioElement.play().then(() => {
-                try {
-                    localStorage.setItem(STORAGE_KEY_PLAYING, 'true');
-                } catch (_) {}
-                updateUI();
-            }).catch(() => {});
+        if (savedVolume > 0 && !isMuted) {
+            claimPlayback();
+            if (audioElement && audioElement.paused) {
+                audioElement.play().then(() => {
+                    try {
+                        localStorage.setItem(STORAGE_KEY_PLAYING, 'true');
+                    } catch (_) {}
+                    updateUI();
+                }).catch(() => {});
+            }
         }
     }
 
@@ -325,8 +478,8 @@
                         <line x1="17" y1="9" x2="23" y2="15"></line>
                     </svg>
                 </button>
-                <div class="audio-slider-container no-cursor-snap">
-                    <input type="range" class="audio-volume-slider no-cursor-snap" min="0" max="1" step="0.01" value="${savedVolume}" aria-label="Volume Slider">
+                <div class="audio-slider-container">
+                    <input type="range" class="audio-volume-slider cursor-hover" min="0" max="1" step="0.01" value="${savedVolume}" aria-label="Volume Slider">
                 </div>
             </div>
         `;
@@ -350,6 +503,7 @@
             trackInfo.addEventListener('click', () => {
                 if (audioElement && !audioElement.paused) {
                     audioElement.pause();
+                    releasePlayback();
                     updateUI();
                 } else {
                     if (isMuted) {
@@ -359,7 +513,8 @@
                         } catch (_) {}
                         applyVolume();
                     }
-                    unlockAndPlayAudio();
+                    claimPlayback();
+                    unlockAndPlayAudio(true);
                 }
             });
         }
@@ -519,12 +674,12 @@
 
         // If the browser already granted activation to this document, unlock immediately
         if (typeof navigator !== 'undefined' && navigator.userActivation && navigator.userActivation.hasBeenActive) {
-            unlockAndPlayAudio();
+            unlockAndPlayAudio(false);
         } else {
             // Register top-level capture listeners so the very first user interaction unlocks audio cleanly with zero console warnings
             ['click', 'pointerdown', 'keydown', 'touchstart'].forEach(evt => {
-                window.addEventListener(evt, unlockAndPlayAudio, { capture: true, once: true });
-                document.addEventListener(evt, unlockAndPlayAudio, { capture: true, once: true });
+                window.addEventListener(evt, onInitialGesture, { capture: true, once: true });
+                document.addEventListener(evt, onInitialGesture, { capture: true, once: true });
             });
         }
     }

@@ -1514,21 +1514,24 @@ body {
 }
 
 .header-audio-bar {
-    width: 100%;
-    max-width: 1720px;
-    margin: 0 auto;
-    padding: 0.75rem 3vw 0;
+    position: absolute;
+    top: 4.4rem;
+    right: 3vw;
+    z-index: 995;
+    pointer-events: none;
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    position: relative;
-    z-index: 900;
+}
+
+.header-audio-bar .backtrack-audio-widget {
+    pointer-events: auto;
 }
 
 @media (max-width: 768px) {
     .header-audio-bar {
-        padding: 0.6rem 1.25rem 0;
-        justify-content: flex-end;
+        top: 3.8rem;
+        right: 1.25rem;
     }
 }
 
@@ -1540,6 +1543,7 @@ body {
     -webkit-user-select: none !important;
     -moz-user-select: none !important;
     outline: none !important;
+    cursor: none !important;
 }
 
 .audio-volume-slider {
@@ -1551,7 +1555,7 @@ body {
     outline: none !important;
     border: none !important;
     border-radius: 0 !important;
-    cursor: pointer;
+    cursor: none !important;
     user-select: none !important;
     -webkit-user-select: none !important;
     -moz-user-select: none !important;
@@ -1574,16 +1578,18 @@ body {
     background-color: var(--text-primary);
     border: 1px solid var(--bg-surface);
     border-radius: 0 !important;
-    cursor: pointer;
+    cursor: none !important;
     outline: none !important;
     transition: transform 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .audio-volume-slider:hover::-webkit-slider-thumb,
+.audio-volume-slider.slider-thumb-hovered::-webkit-slider-thumb,
 .audio-volume-slider::-webkit-slider-thumb:hover {
     transform: scale(1.35);
     background-color: #ffffff;
     box-shadow: 0 0 8px rgba(255, 255, 255, 0.7);
+    cursor: none !important;
 }
 
 .audio-volume-slider::-moz-range-thumb {
@@ -1592,16 +1598,18 @@ body {
     background-color: var(--text-primary);
     border: 1px solid var(--bg-surface);
     border-radius: 0 !important;
-    cursor: pointer;
+    cursor: none !important;
     outline: none !important;
     transition: transform 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .audio-volume-slider:hover::-moz-range-thumb,
+.audio-volume-slider.slider-thumb-hovered::-moz-range-thumb,
 .audio-volume-slider::-moz-range-thumb:hover {
     transform: scale(1.35);
     background-color: #ffffff;
     box-shadow: 0 0 8px rgba(255, 255, 255, 0.7);
+    cursor: none !important;
 }
 
 /* Editorial Features Layout */
