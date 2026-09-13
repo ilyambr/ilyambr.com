@@ -236,65 +236,65 @@
 
             let rect = hoveredElement.getBoundingClientRect();
 
+            cursor.classList.remove('cursor-hide');
+
+            // Outset padding around hovered element or thumb dot
+            let outsetRect;
+            if (isSliderThumb) {
+                const thumbSize = 14;
+                outsetRect = {
+                    left: thumbCenterX - thumbSize / 2,
+                    top: thumbCenterY - thumbSize / 2,
+                    width: thumbSize,
+                    height: thumbSize
+                };
+            } else if (isCritter) {
+                const outsetX = 6;
+                const outsetTop = 6;
+                const bottomOffset = 2;
+                outsetRect = {
+                    left: rect.left - outsetX,
+                    top: rect.top - outsetTop,
+                    width: rect.width + outsetX * 2,
+                    height: Math.max(20, (window.innerHeight - (rect.top - outsetTop)) - bottomOffset)
+                };
+            } else {
+                const outsetX = 6;
+                const outsetY = 4;
+                outsetRect = {
+                    left: rect.left - outsetX,
+                    top: rect.top - outsetY,
+                    width: rect.width + outsetX * 2,
+                    height: rect.height + outsetY * 2
+                };
+            }
+
+            const cursorFactor = 0.94;
+            const centerFactor = 0.06;
+            const elemFactor = 0.06;
+
+            targetTransformX = ((outsetRect.left - e.clientX) * cursorFactor) + (-0.5 * outsetRect.width * centerFactor);
+            targetTransformY = ((outsetRect.top - e.clientY) * cursorFactor) + (-0.5 * outsetRect.height * centerFactor);
+            targetWidth = outsetRect.width;
+            targetHeight = outsetRect.height;
+            targetBorderRadius = 0;
+
             if (isCritter) {
-                hoveredElement.classList.add('critter-hovered');
                 // Critter stays completely stationary (no movement)
                 elementTargetTransformX = 0;
                 elementTargetTransformY = 0;
                 elementCurrentTransformX = 0;
                 elementCurrentTransformY = 0;
                 hoveredElement.style.transform = '';
-
-                // For critters: hide the square morph box outline so the crisp silhouette outline takes over!
-                targetTransformX = -18;
-                targetTransformY = -18;
-                targetWidth = 36;
-                targetHeight = 36;
-                targetBorderRadius = 18;
-                cursor.classList.add('cursor-hide');
-                cursor.classList.remove('cursor-morph');
             } else {
-                cursor.classList.remove('cursor-hide');
-                // Outset padding around hovered element or thumb dot
-                let outsetRect;
-                if (isSliderThumb) {
-                    const thumbSize = 14;
-                    outsetRect = {
-                        left: thumbCenterX - thumbSize / 2,
-                        top: thumbCenterY - thumbSize / 2,
-                        width: thumbSize,
-                        height: thumbSize
-                    };
-                } else {
-                    const outsetX = 6;
-                    const outsetY = 4;
-                    outsetRect = {
-                        left: rect.left - outsetX,
-                        top: rect.top - outsetY,
-                        width: rect.width + outsetX * 2,
-                        height: rect.height + outsetY * 2
-                    };
-                }
-
-                const cursorFactor = 0.94;
-                const centerFactor = 0.06;
-                const elemFactor = 0.06;
-
-                targetTransformX = ((outsetRect.left - e.clientX) * cursorFactor) + (-0.5 * outsetRect.width * centerFactor);
-                targetTransformY = ((outsetRect.top - e.clientY) * cursorFactor) + (-0.5 * outsetRect.height * centerFactor);
-                targetWidth = outsetRect.width;
-                targetHeight = outsetRect.height;
-                targetBorderRadius = 0;
-
                 const elementCenterX = outsetRect.left + outsetRect.width / 2;
                 const elementCenterY = outsetRect.top + outsetRect.height / 2;
                 elementTargetTransformX = (e.clientX - elementCenterX) * elemFactor;
                 elementTargetTransformY = (e.clientY - elementCenterY) * elemFactor;
-
-                cursor.classList.add('cursor-morph');
             }
 
             prevHoveredElement = hoveredElement;
+            cursor.classList.add('cursor-morph');
         } else {
             if (prevHoveredElement) {
                 prevHoveredElement.classList.remove('slider-thumb-hovered');

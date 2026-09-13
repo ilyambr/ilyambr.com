@@ -1058,21 +1058,6 @@ body {
     transform: none !important;
 }
 
-/* Critter Hover Silhouette Outline (crisp, bold 3.5px white stroke, zero movement, zero hazy glow) */
-.dog-avatar-anchor:hover img,
-.dog-avatar-anchor.critter-hovered img {
-    filter: drop-shadow(3.5px 0 0 #ffffff)
-            drop-shadow(-3.5px 0 0 #ffffff)
-            drop-shadow(0 3.5px 0 #ffffff)
-            drop-shadow(0 -3.5px 0 #ffffff)
-            drop-shadow(2.5px 2.5px 0 #ffffff)
-            drop-shadow(-2.5px 2.5px 0 #ffffff)
-            drop-shadow(2.5px -2.5px 0 #ffffff)
-            drop-shadow(-2.5px -2.5px 0 #ffffff)
-            drop-shadow(0 -3px 12px rgba(0, 0, 0, 0.5));
-    transform: none !important;
-}
-
 /* Cat Avatar overrides (lower, larger, and desaturated black aesthetic) */
 .dog-avatar-anchor.is-cat {
     width: 180px;
@@ -1081,20 +1066,6 @@ body {
 
 .dog-avatar-anchor.is-cat img {
     filter: drop-shadow(0 -4px 14px rgba(0, 0, 0, 0.65));
-}
-
-.dog-avatar-anchor.is-cat:hover img,
-.dog-avatar-anchor.is-cat.critter-hovered img {
-    filter: drop-shadow(3.5px 0 0 #ffffff)
-            drop-shadow(-3.5px 0 0 #ffffff)
-            drop-shadow(0 3.5px 0 #ffffff)
-            drop-shadow(0 -3.5px 0 #ffffff)
-            drop-shadow(2.5px 2.5px 0 #ffffff)
-            drop-shadow(-2.5px 2.5px 0 #ffffff)
-            drop-shadow(2.5px -2.5px 0 #ffffff)
-            drop-shadow(-2.5px -2.5px 0 #ffffff)
-            drop-shadow(0 -4px 14px rgba(0, 0, 0, 0.65));
-    transform: none !important;
 }
 
 @media (max-width: 768px) {
