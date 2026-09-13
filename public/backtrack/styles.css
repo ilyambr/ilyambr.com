@@ -1382,3 +1382,193 @@ body {
         display: none;
     }
 }
+
+/* ==========================================================================
+   Ambient Audio Widget (Backtrack Header)
+   ========================================================================== */
+.backtrack-audio-widget {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.3rem 0.65rem;
+    background-color: var(--bg-surface-elevated);
+    border: 1px solid var(--border-color);
+    font-family: var(--font-mono);
+    user-select: none;
+    -webkit-user-select: none;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.backtrack-audio-widget:hover {
+    border-color: var(--border-hover);
+}
+
+.audio-track-info {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+.audio-track-label {
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    text-transform: lowercase;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+}
+
+.audio-wave-icon {
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    height: 12px;
+    width: 14px;
+}
+
+.audio-wave-icon span {
+    width: 2px;
+    height: 3px;
+    background-color: var(--text-muted);
+    border-radius: 0;
+    transition: height 0.2s ease, background-color 0.2s ease;
+}
+
+.backtrack-audio-widget.is-audible .audio-wave-icon span {
+    background-color: var(--text-primary);
+    animation: audioWave 1.1s ease-in-out infinite alternate;
+}
+
+.backtrack-audio-widget.is-audible .audio-wave-icon span:nth-child(1) {
+    animation-delay: 0.0s;
+    height: 8px;
+}
+.backtrack-audio-widget.is-audible .audio-wave-icon span:nth-child(2) {
+    animation-delay: 0.25s;
+    height: 12px;
+}
+.backtrack-audio-widget.is-audible .audio-wave-icon span:nth-child(3) {
+    animation-delay: 0.1s;
+    height: 6px;
+}
+.backtrack-audio-widget.is-audible .audio-wave-icon span:nth-child(4) {
+    animation-delay: 0.35s;
+    height: 10px;
+}
+
+@keyframes audioWave {
+    0% {
+        height: 2px;
+    }
+    50% {
+        height: 11px;
+    }
+    100% {
+        height: 4px;
+    }
+}
+
+.audio-controls-group {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+.audio-mute-btn {
+    background: transparent;
+    border: none;
+    padding: 0.2rem;
+    margin: 0;
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s ease, transform 0.1s ease;
+}
+
+.audio-mute-btn:hover {
+    color: var(--text-primary);
+}
+
+.audio-mute-btn:active {
+    transform: scale(0.92);
+}
+
+.audio-mute-btn svg {
+    display: block;
+}
+
+.backtrack-audio-widget .audio-icon-unmuted {
+    display: block;
+}
+.backtrack-audio-widget .audio-icon-muted {
+    display: none;
+}
+
+.backtrack-audio-widget.is-muted .audio-icon-unmuted {
+    display: none;
+}
+.backtrack-audio-widget.is-muted .audio-icon-muted {
+    display: block;
+    color: var(--text-muted);
+}
+
+.audio-slider-container {
+    display: flex;
+    align-items: center;
+    width: 60px;
+}
+
+.audio-volume-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(to right, var(--text-primary) var(--slider-fill, 50%), var(--border-color) var(--slider-fill, 50%));
+    outline: none;
+    border: none !important;
+    border-radius: 0 !important;
+    cursor: pointer;
+}
+
+.audio-volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 9px;
+    height: 9px;
+    background-color: var(--text-primary);
+    border: 1px solid var(--bg-surface);
+    border-radius: 0 !important;
+    cursor: pointer;
+    transition: transform 0.1s ease, background-color 0.2s ease;
+}
+
+.audio-volume-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.3);
+    background-color: #fff;
+}
+
+.audio-volume-slider::-moz-range-thumb {
+    width: 9px;
+    height: 9px;
+    background-color: var(--text-primary);
+    border: 1px solid var(--bg-surface);
+    border-radius: 0 !important;
+    cursor: pointer;
+}
+
+@media (max-width: 960px) {
+    .audio-track-info {
+        display: none;
+    }
+    .audio-slider-container {
+        width: 48px;
+    }
+}
+
+@media (max-width: 480px) {
+    .audio-slider-container {
+        display: none;
+    }
+}
+
