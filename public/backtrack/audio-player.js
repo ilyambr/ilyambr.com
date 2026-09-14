@@ -8,12 +8,30 @@
 (function () {
     'use strict';
 
-    const AUDIO_SRC = '/backtrack/audio/for-fun.mp3';
+    const TRACKS = [
+        { id: 'for-fun', title: 'for fun', src: '/backtrack/audio/for-fun.mp3' },
+        { id: 'the-way-life-goes', title: 'the way life goes', src: '/backtrack/audio/the-way-life-goes.mp3' },
+        { id: 'xo-tour-life', title: 'xo tour life', src: '/backtrack/audio/xo-tour-life.mp3' }
+    ];
+
+    const STORAGE_KEY_TRACK_INDEX = 'backtrack_audio_track_index_v1';
     const STORAGE_KEY_PLAYING = 'backtrack_audio_playing';
     const STORAGE_KEY_MUTED = 'backtrack_audio_muted_v2';
     const STORAGE_KEY_VOLUME = 'backtrack_audio_volume_v2';
     const STORAGE_KEY_ACTIVE_TAB = 'backtrack_audio_active_tab_id';
     const STORAGE_KEY_HEARTBEAT = 'backtrack_audio_heartbeat';
+
+    // Current track index in TRACKS playlist
+    let currentTrackIndex = 0;
+    try {
+        const storedTrack = localStorage.getItem(STORAGE_KEY_TRACK_INDEX);
+        if (storedTrack !== null) {
+            const parsed = parseInt(storedTrack, 10);
+            if (!isNaN(parsed) && parsed >= 0 && parsed < TRACKS.length) {
+                currentTrackIndex = parsed;
+            }
+        }
+    } catch (_) {}
 
     // Unique identifier for this browser tab
     const TAB_ID = 'tab_' + Math.random().toString(36).substring(2, 9) + '_' + Date.now();
@@ -99,6 +117,19 @@
                     stopHeartbeat();
                     updateUI();
                 }
+            } else if (data.type === 'TRACK_CHANGE' && data.tabId !== TAB_ID) {
+                if (typeof data.index === 'number' && data.index >= 0 && data.index < TRACKS.length) {
+                    currentTrackIndex = data.index;
+                    if (audioElement) {
+                        const wasPlaying = !audioElement.paused;
+                        audioElement.src = TRACKS[currentTrackIndex].src;
+                        audioElement.currentTime = 0;
+                        if (wasPlaying) {
+                            audioElement.play().catch(() => {});
+                        }
+                    }
+                    updateUI();
+                }
             }
         };
     }
@@ -108,6 +139,20 @@
             if (audioElement && !audioElement.paused) {
                 audioElement.pause();
                 stopHeartbeat();
+                updateUI();
+            }
+        } else if (e.key === STORAGE_KEY_TRACK_INDEX && e.newValue !== null) {
+            const newIndex = parseInt(e.newValue, 10);
+            if (!isNaN(newIndex) && newIndex >= 0 && newIndex < TRACKS.length && newIndex !== currentTrackIndex) {
+                currentTrackIndex = newIndex;
+                if (audioElement) {
+                    const wasPlaying = !audioElement.paused;
+                    audioElement.src = TRACKS[currentTrackIndex].src;
+                    audioElement.currentTime = 0;
+                    if (wasPlaying) {
+                        audioElement.play().catch(() => {});
+                    }
+                }
                 updateUI();
             }
         }
@@ -180,8 +225,8 @@
         if (audioElement) return audioElement;
 
         audioElement = new Audio();
-        audioElement.src = AUDIO_SRC;
-        audioElement.loop = true;
+        audioElement.src = TRACKS[currentTrackIndex].src;
+        audioElement.loop = false; // Disable single-track loop so ended event triggers continuous playlist repeat
         audioElement.preload = 'auto';
         audioElement.crossOrigin = 'anonymous';
         audioElement.currentTime = 0;
@@ -196,7 +241,53 @@
             updateUI();
         });
 
+        audioElement.addEventListener('ended', () => {
+            // Repeat playlist continuously: when track ends, advance to next track and play
+            skipTrack(1, true);
+        });
+
         return audioElement;
+    }
+
+    // Skip to next or previous track in playlist with looping
+    function skipTrack(direction = 1, forcePlay = false) {
+        currentTrackIndex = (currentTrackIndex + direction + TRACKS.length) % TRACKS.length;
+        try {
+            localStorage.setItem(STORAGE_KEY_TRACK_INDEX, currentTrackIndex.toString());
+        } catch (_) {}
+
+        if (crossTabChannel) {
+            try {
+                crossTabChannel.postMessage({ type: 'TRACK_CHANGE', tabId: TAB_ID, index: currentTrackIndex });
+            } catch (_) {}
+        }
+
+        userGestureReceived = true;
+        setupAudioElement();
+        setupWebAudio();
+
+        if (audioCtx && audioCtx.state === 'suspended') {
+            audioCtx.resume().catch(() => {});
+        }
+
+        const wasPlaying = audioElement && !audioElement.paused;
+        const shouldPlay = forcePlay || wasPlaying || (!isMuted && savedVolume > 0);
+
+        audioElement.src = TRACKS[currentTrackIndex].src;
+        audioElement.currentTime = 0;
+        audioElement.load();
+
+        if (shouldPlay) {
+            claimPlayback();
+            audioElement.play().then(() => {
+                try {
+                    localStorage.setItem(STORAGE_KEY_PLAYING, 'true');
+                } catch (_) {}
+                updateUI();
+            }).catch(() => {});
+        } else {
+            updateUI();
+        }
     }
 
     // Web Audio Graph Setup
@@ -459,14 +550,22 @@
         widget.id = 'backtrack-audio-widget';
         widget.className = 'backtrack-audio-widget';
 
+        const activeTrack = TRACKS[currentTrackIndex] || TRACKS[0];
+
         widget.innerHTML = `
-            <div class="audio-track-info cursor-hover" title="For Fun" style="cursor: pointer;">
+            <div class="audio-track-info cursor-hover" title="${activeTrack.title} (click to play/pause)" style="cursor: pointer;">
                 <span class="audio-wave-icon" aria-hidden="true">
                     <span></span><span></span><span></span><span></span>
                 </span>
-                <span class="audio-track-label">for fun</span>
+                <span class="audio-track-label">${activeTrack.title}</span>
             </div>
             <div class="audio-controls-group">
+                <button type="button" class="audio-skip-btn cursor-hover" aria-label="Next Track" title="Skip to next track">
+                    <svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round">
+                        <polygon points="5 4 15 12 5 20 5 4"></polygon>
+                        <line x1="19" y1="5" x2="19" y2="19" stroke-linecap="round"></line>
+                    </svg>
+                </button>
                 <button type="button" class="audio-mute-btn cursor-hover" aria-label="Mute Audio">
                     <svg class="audio-icon-unmuted" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
@@ -487,8 +586,16 @@
         bar.appendChild(widget);
 
         const muteBtn = widget.querySelector('.audio-mute-btn');
+        const skipBtn = widget.querySelector('.audio-skip-btn');
         const slider = widget.querySelector('.audio-volume-slider');
         const trackInfo = widget.querySelector('.audio-track-info');
+
+        if (skipBtn) {
+            skipBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                skipTrack(1, true);
+            });
+        }
 
         muteBtn.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -530,6 +637,17 @@
     function updateUI() {
         const widget = document.getElementById('backtrack-audio-widget');
         if (!widget) return;
+
+        const currentTrack = TRACKS[currentTrackIndex] || TRACKS[0];
+        const trackLabel = widget.querySelector('.audio-track-label');
+        if (trackLabel && trackLabel.textContent !== currentTrack.title) {
+            trackLabel.textContent = currentTrack.title;
+        }
+
+        const trackInfo = widget.querySelector('.audio-track-info');
+        if (trackInfo) {
+            trackInfo.setAttribute('title', `${currentTrack.title} (click to play/pause)`);
+        }
 
         const isPlaying = audioElement && !audioElement.paused;
         const isAudible = isPlaying && !isMuted && savedVolume > 0;

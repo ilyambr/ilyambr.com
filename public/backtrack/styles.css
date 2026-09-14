@@ -1477,7 +1477,8 @@ body {
     gap: 0.55rem;
 }
 
-.audio-mute-btn {
+.audio-mute-btn,
+.audio-skip-btn {
     background: transparent;
     border: none;
     padding: 0.2rem;
@@ -1490,15 +1491,18 @@ body {
     transition: color 0.2s ease, transform 0.1s ease;
 }
 
-.audio-mute-btn:hover {
+.audio-mute-btn:hover,
+.audio-skip-btn:hover {
     color: var(--text-primary);
 }
 
-.audio-mute-btn:active {
+.audio-mute-btn:active,
+.audio-skip-btn:active {
     transform: scale(0.92);
 }
 
-.audio-mute-btn svg {
+.audio-mute-btn svg,
+.audio-skip-btn svg {
     display: block;
 }
 
