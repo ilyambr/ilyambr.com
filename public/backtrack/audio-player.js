@@ -17,9 +17,14 @@
     const STORAGE_KEY_TRACK_INDEX = 'backtrack_audio_track_index_v1';
     const STORAGE_KEY_PLAYING = 'backtrack_audio_playing';
     const STORAGE_KEY_MUTED = 'backtrack_audio_muted_v2';
-    const STORAGE_KEY_VOLUME = 'backtrack_audio_volume_v2';
+    const STORAGE_KEY_VOLUME = 'backtrack_audio_volume_v3';
     const STORAGE_KEY_ACTIVE_TAB = 'backtrack_audio_active_tab_id';
     const STORAGE_KEY_HEARTBEAT = 'backtrack_audio_heartbeat';
+
+    // Clear legacy storage keys
+    try {
+        localStorage.removeItem('backtrack_audio_volume_v2');
+    } catch (_) {}
 
     // Current track index in TRACKS playlist
     let currentTrackIndex = 0;
@@ -200,7 +205,7 @@
     let masterGain = null;
     let initialized = false;
 
-    // Retrieve saved user preferences - default NOT muted, default comfortable 50% volume
+    // Retrieve saved user preferences - default NOT muted, default comfortable 10% volume
     let isMuted = false;
     try {
         const storedMuted = localStorage.getItem(STORAGE_KEY_MUTED);
@@ -209,7 +214,7 @@
         }
     } catch (_) {}
 
-    let savedVolume = 0.50;
+    let savedVolume = 0.10;
     try {
         const storedVol = localStorage.getItem(STORAGE_KEY_VOLUME);
         if (storedVol !== null) {
@@ -455,6 +460,12 @@
 
     function toggleMute() {
         isMuted = !isMuted;
+        if (!isMuted && savedVolume === 0) {
+            savedVolume = 0.10;
+            try {
+                localStorage.setItem(STORAGE_KEY_VOLUME, savedVolume.toString());
+            } catch (_) {}
+        }
         try {
             localStorage.setItem(STORAGE_KEY_MUTED, isMuted ? 'true' : 'false');
         } catch (_) {}
